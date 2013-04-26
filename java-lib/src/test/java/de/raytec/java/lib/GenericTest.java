@@ -19,7 +19,7 @@ import org.junit.Test;
 public class GenericTest {
     @Test
     public void nullListToArray(){
-        Assert.assertTrue(Generic.toArray((Collection) null, String.class) == null);
+        Assert.assertTrue(Generic.asArray((Collection) null, String.class) != null);
     }
     
     @Test
@@ -28,7 +28,7 @@ public class GenericTest {
         values.add("hello");
         values.add("world");
         
-        String[] converted = Generic.toArray(values, String.class);
+        String[] converted = Generic.asArray(values, String.class);
         
         Assert.assertTrue(converted != null);
         Assert.assertTrue(converted.length == values.size());
@@ -40,19 +40,19 @@ public class GenericTest {
 
     @Test
     public void nullArrayToList(){
-        Assert.assertTrue(Generic.toList(null) == null);
+        Assert.assertTrue(Generic.asList(null) != null);
     }
     
     @Test
     public void nullValuesToList(){
-        List<String> converted = Generic.toList((String) null);
+        List<String> converted = Generic.asList((String) null);
         Assert.assertTrue(converted != null);
     }
     
     @Test
     public void nonNullValuesToList(){
         String[] values = new String[]{"hallo", "welt"};
-        List<String> converted = Generic.toList(values);
+        List<String> converted = Generic.asList(values);
         Assert.assertTrue(converted != null);
         Assert.assertTrue(converted.size() == values.length);
         for (int i = 0; i < converted.size(); i++) {

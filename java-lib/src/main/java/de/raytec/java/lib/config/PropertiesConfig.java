@@ -4,6 +4,7 @@
  */
 package de.raytec.java.lib.config;
 
+import de.raytec.java.lib.Generic;
 import java.util.List;
 import java.util.Properties;
 
@@ -46,7 +47,7 @@ import java.util.Properties;
         
         String value = properties.getProperty(key);
         
-        validateByRegex(key, value, "\\A[0-9]+(E((+)?[1-9][0-9]*))\\z"); //TODO
+        validateByRegex(key, value, "\\A[0-9]+\\z"); //TODO
         
         return Long.valueOf(value);
     }
@@ -56,7 +57,7 @@ import java.util.Properties;
         
         String value = properties.getProperty(key);
         
-        validateByRegex(key, value, "\\A[0-9]+(\\.[0-9]+)?(E([+-][1-9][0-9]*))\\z"); //TODO
+        validateByRegex(key, value, "\\A[0-9]+(\\.[0-9]+)?(E([+-][0-9]+))\\z"); //TODO
         
         return Double.valueOf(value);
     }
@@ -74,7 +75,7 @@ import java.util.Properties;
     }
 
     public List<String> getAllKeys() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return Generic.asList(properties.stringPropertyNames());
     }
 
     public List<String> getKeysWithPrefix(String prefix) {

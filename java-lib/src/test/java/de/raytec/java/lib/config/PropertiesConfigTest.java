@@ -65,4 +65,46 @@ public class PropertiesConfigTest {
             Assert.fail();
         }
     }
+
+    @Test
+    public void testInvalidLongSyntax() {
+        Properties p = new Properties();
+        p.put("a", "1356.23");
+        p.put("b", "1356.0");
+        p.put("c", "");
+        p.put("d", "132E-23");
+        p.put("e", "132E+1.2");
+        p.put("f", "1356a");
+        p.put("g", "1356E+12");
+        p.put("h", "1356E0");
+
+        Config config = new PropertiesConfig("someID", p);
+        for (String key : config.getAllKeys()) {
+            try {
+                config.getLong(key);
+                Assert.fail();
+            } catch (NoSuchKeyException ex) {
+                Assert.fail();
+            } catch (InvalidValueContentException ex) {
+                // right reponse
+            }
+        }
+    }
+    @Test
+    public void testValidLongSyntax() {
+        Properties p = new Properties();
+        p.put("a", "1356");
+
+        Config config = new PropertiesConfig("someID", p);
+        for (String key : config.getAllKeys()) {
+            try {
+                config.getLong(key);
+                // right reponse
+            } catch (NoSuchKeyException ex) {
+                Assert.fail();
+            } catch (InvalidValueContentException ex) {
+                Assert.fail();
+            }
+        }
+    }
 }
