@@ -14,7 +14,7 @@ public interface Config {
     
     public String getIdentification();
 
-    public String getString(String key) throws NoSuchKeyException;
+    public String getString(String key) throws NoSuchKeyException, InvalidValueContentException;
 
     public Boolean getBoolean(String key) throws NoSuchKeyException, InvalidValueContentException;
 
