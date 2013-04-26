@@ -22,11 +22,11 @@ public interface Config {
 
     public Double getDouble(String key) throws NoSuchKeyException, InvalidValueContentException;
 
-    public List<String> getStrings(String key, String separator) throws NoSuchKeyException;
+    public List<String> getStrings(String key, char separator) throws NoSuchKeyException, InvalidValueContentException;
 
-    public List<Long> getLongs(String key, String separator) throws NoSuchKeyException;
+    public List<Long> getLongs(String key, char separator) throws NoSuchKeyException, InvalidValueContentException;
 
-    public List<Double> getDoubles(String key, String separator) throws NoSuchKeyException;
+    public List<Double> getDoubles(String key, char separator) throws NoSuchKeyException, InvalidValueContentException;
     
     public List<String> getAllKeys();
     
