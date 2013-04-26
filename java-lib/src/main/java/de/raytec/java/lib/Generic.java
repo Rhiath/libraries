@@ -5,6 +5,7 @@
 package de.raytec.java.lib;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +24,16 @@ public abstract class Generic {
             for ( T value : values ){
                 retValue[position++] = value;
             }
+        }
+        
+        return retValue;
+    }
+    
+    public static <T> List<T> toList(T... values ){
+        List<T> retValue = null;
+        
+        if ( values != null ){
+            retValue = Arrays.asList(values);
         }
         
         return retValue;
