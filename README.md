@@ -1,4 +1,4 @@
 libraries
 =========
 
-some libraries that I use for other projects
+some libraries that I use in other projects
