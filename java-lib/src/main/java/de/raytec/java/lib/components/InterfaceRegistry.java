@@ -4,6 +4,7 @@
  */
 package de.raytec.java.lib.components;
 
+import de.raytec.java.lib.doumentation.SoftwarePattern;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  *
  * @author raymoon
  */
+@SoftwarePattern(name="Registry", roles = "?")
 public class InterfaceRegistry implements InterfaceProvider{
 
     private final Map<Class, Object> providedInterfaces = new HashMap<Class, Object>();

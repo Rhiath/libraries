@@ -10,7 +10,5 @@ package de.raytec.java.lib.components;
  * @author raymoon
  */
 public interface Component extends InterfaceProvider {
-    public void prepareNewConfig();
-    public void applyNewConfig();
-    
+
 }
