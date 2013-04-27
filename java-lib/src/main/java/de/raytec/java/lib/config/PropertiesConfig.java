@@ -5,6 +5,7 @@
 package de.raytec.java.lib.config;
 
 import de.raytec.java.lib.Generic;
+import de.raytec.java.lib.doumentation.SoftwarePattern;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,9 +13,12 @@ import java.util.Properties;
  *
  * @author raymoon
  */
+@SoftwarePattern(name = "Object Adapter", roles = "Adapter")
 class PropertiesConfig extends AbstractConfig {
 
     private final String identification;
+    
+    @SoftwarePattern(name = "Object Adapter", roles = "Adaptee")
     private final Properties properties;
 
     public PropertiesConfig(String identification, Properties properties) {

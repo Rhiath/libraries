@@ -79,4 +79,26 @@ public abstract class Generic {
 
         return retValue;
     }
+    
+    /**
+     * compares two objects for equality. If one of the values is null and the other
+     * is not, they are considered unequal. If both of them are null, they are
+     * considered equal. If neither of them is null, the object specific equality
+     * check is performed
+     * 
+     * @param a the first object
+     * @param b the second object
+     * @return true if the two provided values are considered equal
+     */
+    public static boolean equals(Object a, Object b ){
+        boolean retValue = false;
+        
+        if ( a == null && b == null ){
+            retValue = true;
+        } else if ( a != null && b != null ){
+            retValue = a.equals(b);
+        }
+        
+        return retValue;
+    }
 }
