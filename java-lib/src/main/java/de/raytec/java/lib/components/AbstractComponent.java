@@ -5,11 +5,12 @@
 package de.raytec.java.lib.components;
 
 import de.raytec.java.lib.components.lifecycle.AbstractLifeCycleManaged;
+import de.raytec.java.lib.components.lifecycle.exceptions.ConfigurationFailedException;
 import de.raytec.java.lib.components.lifecycle.exceptions.DisposeFailedException;
-import de.raytec.java.lib.components.lifecycle.exceptions.InitializationFailedException;
 import de.raytec.java.lib.components.lifecycle.exceptions.InvalidStateTransitionException;
 import de.raytec.java.lib.components.lifecycle.exceptions.PauseFailedException;
 import de.raytec.java.lib.components.lifecycle.exceptions.StartFailedException;
+import de.raytec.java.lib.config.ConfigProvider;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,41 +33,28 @@ public abstract class AbstractComponent extends AbstractLifeCycleManaged impleme
         return externalRegistry.getProvidedInterface(interfaceClass);
     }
 
-    protected final  <T> void provideInterfaceExternally(T object, Class<T> providedClass) {
+    protected final <T> void provideInterfaceExternally(T object, Class<T> providedClass) {
         externalRegistry.provideInterface(object, providedClass);
     }
 
-    protected final  <T> void provideInterfaceInternally(T object, Class<T> providedClass) {
+    protected final <T> void provideInterfaceInternally(T object, Class<T> providedClass) {
         internalRegistry.provideInterface(object, providedClass);
     }
 
-    protected final  <T> void provideParentProvidedInterfaceToChildren(Class<T> interfaceClass) throws NoSuchprovidedInterfaceException {
+    protected final <T> void provideParentProvidedInterfaceToChildren(Class<T> interfaceClass) throws NoSuchprovidedInterfaceException {
         this.internalRegistry.provideInterface(parentProvider.getProvidedInterface(interfaceClass), interfaceClass);
     }
 
-    protected final  <T> T aquireParentProvidedInterface(Class<T> interfaceClass) throws NoSuchprovidedInterfaceException {
+    protected final <T> T aquireParentProvidedInterface(Class<T> interfaceClass) throws NoSuchprovidedInterfaceException {
         return parentProvider.getProvidedInterface(interfaceClass);
     }
 
-    protected final  <T> T aquireChildComponentInterface(Component childComponent, Class<T> providedClass) throws NoSuchprovidedInterfaceException {
+    protected final <T> T aquireChildComponentInterface(Component childComponent, Class<T> providedClass) throws NoSuchprovidedInterfaceException {
         if (!this.childComponents.contains(childComponent)) {
             this.childComponents.add(childComponent);
         }
 
         return childComponent.getProvidedInterface(providedClass);
-    }
-
-    @Override
-    protected final void doInit() throws InitializationFailedException {
-        for (Component child : childComponents) {
-            try {
-                child.init();
-            } catch (InvalidStateTransitionException ex) {
-                throw new InitializationFailedException("failed to initialize child component", ex);
-            }
-        }
-
-        doSelfInit();
     }
 
     @Override
@@ -110,11 +98,25 @@ public abstract class AbstractComponent extends AbstractLifeCycleManaged impleme
         }
     }
 
-    protected abstract void doSelfInit();
+    @Override
+    protected final void doApplyConfiguration(ConfigProvider newConfig) throws ConfigurationFailedException {
+
+        for (Component child : childComponents) {
+            try {
+                child.applyConfiguration(newConfig);
+            } catch (InvalidStateTransitionException ex) {
+                throw new ConfigurationFailedException("failed to dipose child component", ex);
+            }
+        }
+
+        doSelfApplyConfiguration(newConfig);
+    }
 
     protected abstract void doSelfStart();
 
     protected abstract void doSelfPause();
 
     protected abstract void doSelfDispose();
+
+    protected abstract void doSelfApplyConfiguration(ConfigProvider newConfig);
 }
