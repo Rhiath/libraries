@@ -40,6 +40,15 @@ public class Program {
         return p;
     }
 
+    public static Program newCharClass(Range range) {
+        RangeSet ranges = new RangeSet();
+        ranges.add(range);
+        Program p = new Program();
+        p.instructions = new Instruction[] {
+                Instruction.newCharClass(ranges), MATCH };
+        return p;
+    }
+
     public int size() {
         return this.instructions.length;
     }

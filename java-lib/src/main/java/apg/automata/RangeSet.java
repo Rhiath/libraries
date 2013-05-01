@@ -16,48 +16,34 @@
 package apg.automata;
 
 import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Set of character ranges.
  */
 public class RangeSet implements Iterable<Range> {
-    private TreeMap<Range, Range> ranges;
+    private List<Range> ranges;
 
     public RangeSet() {
-        this.ranges = new TreeMap<Range, Range>();
+        this.ranges = new LinkedList<Range>();
     }
 
-    public boolean add(Range e) {
-        Range r = this.ranges.remove(e);
-        if (r != null) {
-            e = new Range(Math.min(r.min(), e.min()), Math.max(
-                    r.max(), e.max()));
-        }
+    public void add(Range e) {
+        this.ranges.add(e);
+    }
 
-        if (e.max() < Integer.MAX_VALUE) {
-            r = this.ranges.remove(new Range(e.min(), e.max() + 1));
-            if (r != null) {
-                e = new Range(e.min(), r.max());
+    public boolean contains(int character) {
+        for ( Range r  :ranges ){
+            if ( r.min() <= character && r.max() >= character){
+                return true;
             }
         }
-
-        if (e.min() > Integer.MIN_VALUE) {
-            r = this.ranges.remove(new Range(e.min() - 1, e.max()));
-            if (r != null) {
-                e = new Range(r.min(), e.max());
-            }
-        }
-
-        return this.ranges.put(e, e) == null;
+        
+        return false;
     }
 
-    public boolean contains(Range r) {
-        return this.ranges.containsKey(r);
-    }
-
-    @Override
     public Iterator<Range> iterator() {
-        return this.ranges.keySet().iterator();
+       return ranges.iterator();
     }
 }

@@ -60,7 +60,7 @@ public class NFA {
                 break;
 
             case CharClass:
-                if (i.getCharClass().contains(new Range(character, character))) {
+                if (i.getCharClass().contains(character)) {
                     pending.add(ip + 1);
                 }
 
