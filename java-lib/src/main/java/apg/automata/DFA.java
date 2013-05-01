@@ -18,54 +18,17 @@ package apg.automata;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
-import util.MappedMatrix;
 import util.Matrix;
 
 public class DFA {
     private Matrix<Integer> transition;
-    private Matrix<Integer> reverseTransition;
     private int state;
     private Set<Integer> acceptStates;
 
-    public DFA(Program prog, Range alphabet) {
-        this.transition = new MappedMatrix<Integer>();
-        this.reverseTransition = new MappedMatrix<Integer>();
+    public DFA(Matrix<Integer> transition, Set<Integer> acceptStates) {
+        this.transition = transition;
         this.state = 0;
-        this.acceptStates = new TreeSet<Integer>();
-
-        List<Set<Integer>> states = new ArrayList<Set<Integer>>();
-        states.add(new NFA(prog).state());
-        if (states.get(0).contains(-1)) {
-            this.acceptStates.add(0);
-        }
-
-        int unmarkedState = 0;
-        while (unmarkedState < states.size()) {
-            for (int c = alphabet.min(); c <= alphabet.max(); c++) {
-                NFA fa = new NFA(prog, states.get(unmarkedState));
-                fa.step(c);
-
-                Set<Integer> to = fa.state();
-                if (to.size() != 0) {
-                    int nextState = states.indexOf(to);
-                    if (nextState == -1) {
-                        states.add(to);
-                        nextState = states.size() - 1;
-
-                        if (to.contains(-1)) {
-                            this.acceptStates.add(nextState);
-                        }
-                    }
-
-                    this.transition.put(unmarkedState, c, nextState);
-                    this.reverseTransition.put(nextState, c, unmarkedState);
-                }
-            }
-
-            unmarkedState++;
-        }
+        this.acceptStates = acceptStates;
     }
 
     public int getState() {
@@ -103,19 +66,6 @@ public class DFA {
 
         for (int i = 0; i < this.transition.colSize(); i++) {
             Integer nextState = this.transition.get(this.state, i);
-            if (nextState != null) {
-                values.add(i);
-            }
-        }
-
-        return values;
-    }
-
-    public List<Integer> in() {
-        List<Integer> values = new ArrayList<Integer>();
-
-        for (int i = 0; i < this.reverseTransition.colSize(); i++) {
-            Integer nextState = this.reverseTransition.get(this.state, i);
             if (nextState != null) {
                 values.add(i);
             }
