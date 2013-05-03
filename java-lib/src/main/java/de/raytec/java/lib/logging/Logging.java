@@ -5,7 +5,11 @@
 package de.raytec.java.lib.logging;
 
 import de.raytec.java.lib.config.Config;
+import de.raytec.java.lib.config.InvalidValueContentException;
+import de.raytec.java.lib.config.NoSuchKeyException;
+import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
@@ -13,47 +17,51 @@ import org.apache.log4j.Logger;
  */
 public class Logging {
     
-    public static void configure(Config config){
-        // TODO
+    public static void configure(Config config) throws NoSuchKeyException, InvalidValueContentException{
+        Properties p = new Properties();
+        for ( String key : config.getAllKeys()){
+            p.put(key, config.getString(key));
+        }
+        PropertyConfigurator.configure(p);
     }
 
     public static void debug(Class loggedIn, String message) {
-        Logger.getLogger(loggedIn.getCanonicalName()).debug(message);
+        Logger.getLogger(loggedIn).debug(message);
     }
 
     public static void debug(Class loggedIn, String message, Exception exception) {
-        Logger.getLogger(loggedIn.getCanonicalName()).debug(message, exception);
+        Logger.getLogger(loggedIn).debug(message, exception);
     }
 
     public static void info(Class loggedIn, String message, Exception exception) {
-        Logger.getLogger(loggedIn.getCanonicalName()).info(message, exception);
+        Logger.getLogger(loggedIn).info(message, exception);
     }
 
     public static void info(Class loggedIn, String message) {
-        Logger.getLogger(loggedIn.getCanonicalName()).info(message);
+        Logger.getLogger(loggedIn).info(message);
     }
 
     public static void warn(Class loggedIn, String message) {
-        Logger.getLogger(loggedIn.getCanonicalName()).warn(message);
+        Logger.getLogger(loggedIn).warn(message);
     }
 
     public static void warn(Class loggedIn, String message, Exception exception) {
-        Logger.getLogger(loggedIn.getCanonicalName()).warn(message, exception);
+        Logger.getLogger(loggedIn).warn(message, exception);
     }
 
     public static void error(Class loggedIn, String message) {
-        Logger.getLogger(loggedIn.getCanonicalName()).error(message);
+        Logger.getLogger(loggedIn).error(message);
     }
 
     public static void error(Class loggedIn, String message, Exception exception) {
-        Logger.getLogger(loggedIn.getCanonicalName()).error(message, exception);
+        Logger.getLogger(loggedIn).error(message, exception);
     }
 
     public static void fatal(Class loggedIn, String message) {
-        Logger.getLogger(loggedIn.getCanonicalName()).fatal(message);
+        Logger.getLogger(loggedIn).fatal(message);
     }
 
     public static void fatal(Class loggedIn, String message, Exception exception) {
-        Logger.getLogger(loggedIn.getCanonicalName()).fatal(message, exception);
+        Logger.getLogger(loggedIn).fatal(message, exception);
     }
 }
