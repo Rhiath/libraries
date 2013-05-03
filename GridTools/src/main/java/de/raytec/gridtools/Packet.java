@@ -23,7 +23,7 @@ public class Packet {
         pool.freePacket(packet);
     }
     
-    public byte[] getDate(){
+    public byte[] getData(){
         return packet.getData();
     }
     

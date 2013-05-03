@@ -32,7 +32,7 @@ public class Sender {
         this.socket = socket;
     }
 
-    public void sendAsynch(final byte[] data, final byte[] address, final int port) {
+    public synchronized void sendAsynch(final byte[] data, final byte[] address, final int port) {
         final DatagramPacket packet = resources.getNextPacket();
 
         executor.submit(new Runnable() {
