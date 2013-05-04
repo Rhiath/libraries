@@ -4,13 +4,14 @@
  */
 package de.raytec.gridtools;
 
+import de.raytec.gridtools.messaging.Message;
+import de.raytec.java.lib.doumentation.SoftwarePattern;
+import de.raytec.java.lib.exceptions.InvalidContentException;
 import de.raytec.java.lib.logging.Logging;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
@@ -30,6 +31,11 @@ public class Sender {
         this.executor = executor;
         this.resources = resources;
         this.socket = socket;
+    }
+    
+    @SoftwarePattern(name = "WrapperFacade", roles = "?")
+    public void sendAsynch(Message message, final byte[] address, final int port) throws InvalidContentException{
+        sendAsynch(message.getEncoder().encode(message), address, port);
     }
 
     public synchronized void sendAsynch(final byte[] data, final byte[] address, final int port) {

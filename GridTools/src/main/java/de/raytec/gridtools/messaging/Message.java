@@ -8,7 +8,7 @@ package de.raytec.gridtools.messaging;
  *
  * @author raymoon
  */
-public interface Message {
+public interface Message <T extends Message>{
    
-    
+    public MessageEncoder<T> getEncoder();
 }

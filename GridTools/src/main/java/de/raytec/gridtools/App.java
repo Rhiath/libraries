@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.ExecutorService;
@@ -39,13 +41,13 @@ public class App {
         final Sender sender = new Sender(senderExecutor, senderPacketPool, senderSocket);
 
 
-        DatagramSocket receiverSocket = new DatagramSocket(9000);
+        final DatagramSocket receiverSocket = new DatagramSocket(9000);
         DatagramPool receiverPacketPool = new DatagramPool(10, 1500);
         ExecutorService receiverExecutor = new ThreadPoolExecutor(4, 4, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         Receiver receiver = new Receiver(receiverSocket, receiverExecutor, receiverPacketPool, buildHandler(sender));
 
 
-        final byte[] localReceiverAddress = receiverSocket.getLocalAddress().getAddress(); // TODO fix determining the local network address
+        final Inet4Address address = (Inet4Address) receiverSocket.getLocalAddress(); // TODO fix determining the local network address
         Thread selfAnnouncer = new Thread() {
             @Override
             public void run() {
@@ -55,15 +57,12 @@ public class App {
                     } catch (InterruptedException ex) {
                         Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    byte[] data = new byte[8];
-                    ByteBuffer buffer = ByteBuffer.wrap(data);
-                    buffer.order(ByteOrder.BIG_ENDIAN); // network byte order
-                    buffer.put((byte) 1); // protocol version 1
-                    buffer.put((byte) 1); // command "Receiver available on address ..."
-                    buffer.put(localReceiverAddress); // IPv4 address
-                    buffer.putShort((short) 9000); // port ...
-
-                    sender.sendAsynch(data, new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255}, 9000);
+                    ReceiverEndpointAnnouncement announcment = new ReceiverEndpointAnnouncement(address, (short) receiverSocket.getLocalPort());
+                    try {
+                        sender.sendAsynch(announcment, new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255}, 9000);
+                    } catch (InvalidContentException ex) {
+                        Logging.warn(this.getClass(), "failed to send self-announcment over the network", ex);
+                    }
                 }
             }
         };
@@ -77,7 +76,7 @@ public class App {
     private static PacketHandler buildHandler(final Sender sender) {
         return new PacketHandler() {
             public void handle(Packet packet) {
-                if (DecoderHelper.decoderMatchesMessage(ReceiverEndpointAnnouncement.getDecoder(), packet.getData())) {
+                if (DecoderHelper.decoderMatchesPacket(ReceiverEndpointAnnouncement.getDecoder(), packet)) {
                     try {
                         ReceiverEndpointAnnouncement announcement = DecoderHelper.decodeMessage(packet.getData(), ReceiverEndpointAnnouncement.getDecoder());
                         System.out.println("received 'ReceiverEndpointAnnouncement' from " + announcement.getAddress().getHostAddress() + ":" + announcement.getPort());

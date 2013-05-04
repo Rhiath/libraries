@@ -4,6 +4,7 @@
  */
 package de.raytec.gridtools.messaging;
 
+import de.raytec.gridtools.Packet;
 import de.raytec.java.lib.exceptions.InvalidContentException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -14,12 +15,12 @@ import java.nio.ByteOrder;
  */
 public class DecoderHelper {
 
-    public static boolean decoderMatchesMessage( MessageDecoder decoder, byte[] message) {
-        byte version = message[0];
-        byte opcode = message[0];
-        int length = message.length - 2;
+    public static boolean decoderMatchesPacket( MessageDecoder decoder, Packet packet) {
+        byte version = packet.getData()[0];
+        byte opcode = packet.getData()[1];
+        int length = packet.getLength() - 2;
 
-        return (decoder.getMessageSize() <= length) && (decoder.getOpCode() == opcode) && (decoder.getVersion() == version);
+        return (decoder.getMessageSize() == length) && (decoder.getOpCode() == opcode) && (decoder.getVersion() == version);
     }
 
     public static <T extends Message> T decodeMessage(byte[] message, MessageDecoder<T> decoder) throws InvalidContentException {

@@ -8,6 +8,7 @@ import de.raytec.java.lib.exceptions.InvalidContentException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  *
@@ -17,6 +18,24 @@ public class ReceiverEndpointAnnouncement implements Message {
 
     private final Inet4Address address;
     private final short port;
+    
+    public MessageEncoder<ReceiverEndpointAnnouncement> getEncoder(){
+        return new MessageEncoder<ReceiverEndpointAnnouncement>() {
+
+            public byte[] encode(ReceiverEndpointAnnouncement message) throws InvalidContentException {
+               byte[] retValue = new byte[4+2+1+1];
+               
+               ByteBuffer buffer = ByteBuffer.wrap(retValue);
+               buffer.order(ByteOrder.BIG_ENDIAN); // network byte order
+               buffer.put(getDecoder().getVersion());
+               buffer.put(getDecoder().getOpCode());
+               buffer.put(message.address.getAddress());
+               buffer.putShort(message.port);
+               
+               return retValue;
+            }
+        };
+    }
     
     public static MessageDecoder<ReceiverEndpointAnnouncement> getDecoder(){
         return new MessageDecoder<ReceiverEndpointAnnouncement>() {
@@ -46,6 +65,8 @@ public class ReceiverEndpointAnnouncement implements Message {
             }
         };
     }
+    
+  
     
     public ReceiverEndpointAnnouncement(Inet4Address address, short port) {
         super();
