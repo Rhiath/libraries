@@ -10,6 +10,14 @@
     <name>java-lib</name>
     <url>http://maven.apache.org</url>
  
+    <distributionManagement>
+        <repository>
+            <id>nexus-release</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.1.210:8085/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement> 
+ 
     <scm>
         <developerConnection>scm:git:[fetch=]https://github.com/Rhiath/libraries.git</developerConnection>
     </scm>
