@@ -23,14 +23,14 @@ import org.json.JSONObject;
  *
  * @author raymoon
  */
-public class GameParticipator implements Runnable {
+public class GameHandler implements Runnable {
 
     private final Account account;
     private final GameAI ai;
     private final String host;
     private final int port;
 
-    public GameParticipator(GameAI ai, Account account, String host, int port) {
+    public GameHandler(GameAI ai, Account account, String host, int port) {
         this.account = account;
         this.ai = ai;
         this.host = host;
@@ -61,9 +61,9 @@ public class GameParticipator implements Runnable {
             }
 
         } catch (UnknownHostException ex) {
-            Logger.getLogger(GameParticipator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(GameParticipator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -75,18 +75,7 @@ public class GameParticipator implements Runnable {
         return state.startsWith("{");
     }
 
-    private List<Player> parsePlayers(JSONObject object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private List<Planet> parsePlanets(JSONObject object, List<Player> players) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private List<Fleet> parseFleets(JSONObject object, List<Player> players, List<Planet> planets) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+ 
     private void performAction(Action action, OutputStream os) throws IOException {
         if ( action instanceof NullAction ){
             send(os, "nop");
@@ -97,9 +86,10 @@ public class GameParticipator implements Runnable {
     }
 
     private Action determineResultingAction(JSONObject object) {
-        List<Player> players = parsePlayers(object);
-        List<Planet> planets = parsePlanets(object, players);
-        List<Fleet> fleets = parseFleets(object, players, planets);
+        GameStateParser parser = new GameStateParser(object);
+        List<Player> players = parser.parsePlayers();
+        List<Planet> planets = parser.parsePlanets();
+        List<Fleet> fleets = parser.parseFleets();
         Action action = ai.computeAction(players, planets, fleets);
         return action;
     }

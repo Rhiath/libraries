@@ -16,13 +16,15 @@ public class Planet {
     private final int y;
     private final Player owner;
     private final Map<ShipType, Integer> defenseStrength;
+    private final Map<ShipType, Integer> productionPerRound;
     private final int id;
 
-    public Planet(int x, int y, Player owner, Map<ShipType, Integer> defenseStrength, int id) {
+    public Planet(int x, int y, Player owner, Map<ShipType, Integer> defenseStrength, Map<ShipType, Integer> productionPerRound, int id) {
         this.x = x;
         this.y = y;
         this.owner = owner;
         this.defenseStrength = defenseStrength;
+        this.productionPerRound = productionPerRound;
         this.id = id;
     }
 
