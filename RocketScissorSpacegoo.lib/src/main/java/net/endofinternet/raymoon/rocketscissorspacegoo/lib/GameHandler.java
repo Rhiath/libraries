@@ -113,7 +113,6 @@ public class GameHandler implements Runnable {
     private String readInputLine(BufferedReader br) throws IOException {
         String retValue = br.readLine();
         System.out.println("received " + retValue);
-
         return retValue;
     }
 }
