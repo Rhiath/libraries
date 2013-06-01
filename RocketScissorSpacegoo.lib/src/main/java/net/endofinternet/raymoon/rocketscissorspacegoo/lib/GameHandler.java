@@ -10,17 +10,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.endofinternet.raymoon.rocketscissorspacegoo.lib.actions.AttackAction;
 import net.endofinternet.raymoon.rocketscissorspacegoo.lib.actions.NullAction;
+
 import org.json.JSONObject;
 
 /**
- *
+ * 
  * @author raymoon
  */
 public class GameHandler implements Runnable {
@@ -82,7 +83,11 @@ public class GameHandler implements Runnable {
             send(os, "nop");
         } else if (action instanceof AttackAction) {
             AttackAction attackAction = (AttackAction) action;
-            send(os, "send " + attackAction.getSource().getId() + " " + attackAction.getDestination().getId() + " " + attackAction.getDefenseStrength().get(ShipType.ROCKET) + " " + attackAction.getDefenseStrength().get(ShipType.SCISSORS) + " " + attackAction.getDefenseStrength().get(ShipType.SPACEGOO));
+            send(os, "send " + attackAction.getSource().getId() + " "
+                    + attackAction.getDestination().getId() + " "
+                    + attackAction.getDefenseStrength().get(ShipType.ROCKET) + " "
+                    + attackAction.getDefenseStrength().get(ShipType.SCISSORS) + " "
+                    + attackAction.getDefenseStrength().get(ShipType.SPACEGOO));
         }
     }
 
@@ -106,9 +111,9 @@ public class GameHandler implements Runnable {
     }
 
     private String readInputLine(BufferedReader br) throws IOException {
-        String retValue =  br.readLine();
-       // System.out.println("received "+retValue);
-        
+        String retValue = br.readLine();
+        System.out.println("received " + retValue);
+
         return retValue;
     }
 }
