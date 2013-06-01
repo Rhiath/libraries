@@ -57,7 +57,9 @@ public class GameHandler implements Runnable {
                         Action action = determineResultingAction(object);
                         performAction(action, os);
                     }
+                    System.out.println("responded with action");
                 }
+                state = readInputLine(br);
             }
 
         } catch (UnknownHostException ex) {
@@ -75,13 +77,12 @@ public class GameHandler implements Runnable {
         return state.startsWith("{");
     }
 
- 
     private void performAction(Action action, OutputStream os) throws IOException {
-        if ( action instanceof NullAction ){
+        if (action instanceof NullAction) {
             send(os, "nop");
-        } else if ( action instanceof AttackAction ){
+        } else if (action instanceof AttackAction) {
             AttackAction attackAction = (AttackAction) action;
-            send(os, "send "+attackAction.getSource().getId()+" "+attackAction.getDestination().getId()+" "+attackAction.getDefenseStrength().get(ShipType.ROCKET)+" "+attackAction.getDefenseStrength().get(ShipType.SCISSORS)+" "+attackAction.getDefenseStrength().get(ShipType.SPACEGOO));
+            send(os, "send " + attackAction.getSource().getId() + " " + attackAction.getDestination().getId() + " " + attackAction.getDefenseStrength().get(ShipType.ROCKET) + " " + attackAction.getDefenseStrength().get(ShipType.SCISSORS) + " " + attackAction.getDefenseStrength().get(ShipType.SPACEGOO));
         }
     }
 
@@ -95,10 +96,19 @@ public class GameHandler implements Runnable {
     }
 
     private boolean getGameHasReachedEnd(JSONObject object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return object.getBoolean("game_over");
     }
 
     private void send(OutputStream os, String nop) throws IOException {
-        os.write((nop+"\n\r").getBytes());
+        System.out.println("sending " + nop);
+        os.write((nop + "\n\r").getBytes());
+        os.flush();
+    }
+
+    private String readInputLine(BufferedReader br) throws IOException {
+        String retValue =  br.readLine();
+       // System.out.println("received "+retValue);
+        
+        return retValue;
     }
 }

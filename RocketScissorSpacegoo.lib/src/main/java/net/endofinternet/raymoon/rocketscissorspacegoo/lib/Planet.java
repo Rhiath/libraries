@@ -50,7 +50,11 @@ public class Planet {
         return defenseStrength;
     }
 
-    private int getRequiredTravelTimeTo(Planet destination) {
+    public Map<ShipType, Integer> getProductionPerRound() {
+        return productionPerRound;
+    }
+
+    public int getRequiredTravelTimeTo(Planet destination) {
         return (int) Math.ceil(Math.sqrt(Math.pow(x - destination.x, 2.0) + Math.pow(y - destination.y, 2.0)));
     }
 
