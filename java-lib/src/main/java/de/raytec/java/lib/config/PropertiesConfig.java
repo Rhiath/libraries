@@ -5,7 +5,7 @@
 package de.raytec.java.lib.config;
 
 import de.raytec.java.lib.Generic;
-import de.raytec.java.lib.doumentation.SoftwarePattern;
+import de.raytec.java.lib.documentation.SoftwarePattern;
 import java.util.List;
 import java.util.Properties;
 

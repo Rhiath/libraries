@@ -4,7 +4,7 @@
  */
 package de.raytec.java.lib.components;
 
-import de.raytec.java.lib.doumentation.SoftwarePattern;
+import de.raytec.java.lib.documentation.SoftwarePattern;
 import java.util.HashMap;
 import java.util.Map;
 

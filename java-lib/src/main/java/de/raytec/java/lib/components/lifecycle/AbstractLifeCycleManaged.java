@@ -12,7 +12,7 @@ import de.raytec.java.lib.components.lifecycle.exceptions.InitializationFailedEx
 import de.raytec.java.lib.components.lifecycle.exceptions.PauseFailedException;
 import de.raytec.java.lib.components.lifecycle.exceptions.StartFailedException;
 import de.raytec.java.lib.config.ConfigProvider;
-import de.raytec.java.lib.doumentation.SoftwarePattern;
+import de.raytec.java.lib.documentation.SoftwarePattern;
 
 /**
  *

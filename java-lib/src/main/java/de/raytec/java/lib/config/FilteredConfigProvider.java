@@ -4,7 +4,7 @@
  */
 package de.raytec.java.lib.config;
 
-import de.raytec.java.lib.doumentation.SoftwarePattern;
+import de.raytec.java.lib.documentation.SoftwarePattern;
 import java.util.LinkedList;
 import java.util.List;
 
