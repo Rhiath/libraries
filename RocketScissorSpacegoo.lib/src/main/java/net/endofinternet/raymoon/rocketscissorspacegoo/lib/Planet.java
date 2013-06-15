@@ -55,7 +55,8 @@ public class Planet {
     }
 
     public int getRequiredTravelTimeTo(Planet destination) {
-        return (int) Math.ceil(Math.sqrt(Math.pow(x - destination.x, 2.0) + Math.pow(y - destination.y, 2.0)));
+        return (int) Math.ceil(Math.sqrt(Math.pow(x - destination.x, 2.0)
+                + Math.pow(y - destination.y, 2.0)));
     }
 
     public int getProductionDiversity() {
@@ -76,7 +77,7 @@ public class Planet {
         return amount;
     }
 
-    public class PlanetComparator implements Comparator<Planet> {
+    public static class PlanetComparator implements Comparator<Planet> {
 
         private SortParameter[] parameters;
         private Planet source;
@@ -92,22 +93,23 @@ public class Planet {
                 case DISTANCE:
                     if (source.getRequiredTravelTimeTo(p1) > source.getRequiredTravelTimeTo(p2)) {
                         return 1;
-                    } else if (source.getRequiredTravelTimeTo(p1) < source.getRequiredTravelTimeTo(p2)) {
+                    } else if (source.getRequiredTravelTimeTo(p1) < source
+                            .getRequiredTravelTimeTo(p2)) {
                         return -1;
                     }
                     break;
                 case PRODUCTION_DIVERSITY:
                     if (p1.getProductionDiversity() > p2.getProductionDiversity()) {
-                        return 1;
-                    } else if (p1.getProductionDiversity() < p2.getProductionDiversity()) {
                         return -1;
+                    } else if (p1.getProductionDiversity() < p2.getProductionDiversity()) {
+                        return 1;
                     }
                     break;
                 case PRODUCTION_PER_ROUND:
                     if (p1.getSummedProductionPerRound() > p2.getSummedProductionPerRound()) {
-                        return 1;
-                    } else if (p1.getSummedProductionPerRound() < p2.getSummedProductionPerRound()) {
                         return -1;
+                    } else if (p1.getSummedProductionPerRound() < p2.getSummedProductionPerRound()) {
+                        return 1;
                     }
                     break;
                 }
@@ -116,11 +118,12 @@ public class Planet {
         }
     }
 
-    public enum SortParameter {
+    public static enum SortParameter {
         DISTANCE, PRODUCTION_DIVERSITY, PRODUCTION_PER_ROUND
     }
 
-    public Comparator<Planet> getComparator(SortParameter[] sortParameters, Planet sourcePlanet) {
+    public static Comparator<Planet> getComparator(SortParameter[] sortParameters,
+            Planet sourcePlanet) {
         return new PlanetComparator(sortParameters, sourcePlanet);
     }
 }
