@@ -12,6 +12,7 @@ import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.jdom2.Document;
@@ -112,11 +114,34 @@ public class SVGParser {
         Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 1);//Font.getFont(Font.SANS_SERIF);
         font = font.deriveFont((float) Double.parseDouble(fontSize));
 
-        Geometry geom = FontGlyphReader.read(child.getText(), font, 0.1, new GeometryFactory());
+        Geometry geom = FontGlyphReader.read(child.getText(), font, new GeometryFactory());
+
+        List<Geometry> diff = new LinkedList<Geometry>();
+        if (geom instanceof MultiPolygon) {
+            MultiPolygon multi = (MultiPolygon) geom;
+            for (int i = 0; i < multi.getNumGeometries(); i++) {
+                for (int j = 0; j < multi.getNumGeometries(); j++) {
+                    if (i != j) {
+                        Geometry geomI = multi.getGeometryN(i);
+                        Geometry geomJ = multi.getGeometryN(j);
+
+                        if (geomI.contains(geomJ)) {
+                            diff.add(geomJ);
+                        }
+                    }
+                }
+            }
+        }
+        for (Geometry geoDiff : diff) {
+            while (geom.intersection(geoDiff).getArea() > 0.0) {
+                geom = geom.difference(geoDiff);
+            }
+        }
 
         AffineTransformation translation = AffineTransformation.translationInstance(Double.parseDouble(x), Double.parseDouble(y));
-        AffineTransformation mirror = AffineTransformation.reflectionInstance(10,0);
+        AffineTransformation mirror = AffineTransformation.reflectionInstance(10, 0);
         geom.apply(mirror.compose(translation));
+
 
         declareGeometry("TEXT", geom);
     }
