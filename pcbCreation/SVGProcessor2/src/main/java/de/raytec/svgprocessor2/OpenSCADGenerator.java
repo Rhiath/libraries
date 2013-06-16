@@ -29,7 +29,7 @@ public class OpenSCADGenerator {
         this.geometry = geometry;
     }
 
-    public void generateOutput() throws Exception {
+    public void generateOutput(double height) throws Exception {
         fos = new FileOutputStream(outFile);
 
         try {
@@ -50,7 +50,7 @@ public class OpenSCADGenerator {
                 throw new Exception("geometry type not supported");
             }
 
-            writeModuleInvocations();
+            writeModuleInvocations(height);
 
         } finally {
             fos.close();
@@ -117,9 +117,9 @@ public class OpenSCADGenerator {
         return id++;
     }
 
-    private void writeModuleInvocations() throws IOException {
+    private void writeModuleInvocations(double height) throws IOException {
         for (int i = 0; i < id; i++) {
-            writeLN("linear_extrude(height=0.5){");
+            writeLN("linear_extrude(height="+height+"){");
             writeLN("poly_" + i + "();");
             writeLN("}");
         }
