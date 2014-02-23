@@ -11,6 +11,8 @@ package net.endofinternet.raymoon.persistence.interfaces;
 public interface TableDataGatewayLookup {
 
     /**
+     * provides a specific table data gateway that has been registered to the
+     * lookup
      *
      * @param <T> the table data gateway type that shall be provided
      * @param interfaceType the interface of the object to register

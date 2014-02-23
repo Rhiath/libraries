@@ -10,5 +10,8 @@ package net.endofinternet.raymoon.persistence.interfaces;
  */
 public interface Fetchable {
 
+    /**
+     * recursively retrieves the object implementing this interface from persistence.
+     */
     public void fetch();
 }
