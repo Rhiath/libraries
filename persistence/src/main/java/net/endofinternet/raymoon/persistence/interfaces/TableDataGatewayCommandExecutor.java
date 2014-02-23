@@ -4,11 +4,19 @@
  */
 package net.endofinternet.raymoon.persistence.interfaces;
 
+import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
+
 /**
  *
  * @author raymoon
  */
 public interface TableDataGatewayCommandExecutor {
 
-    public void executeCommand(TableDateGatewayCommand commandToExecute);
+    /**
+     * executes a command
+     * 
+     * @param commandToExecute the command to execute
+     * @throws CommandExecutionFailedException if the command could not be fully executed / commit of the results failed
+     */
+    public void executeCommand(TableDateGatewayCommand commandToExecute) throws CommandExecutionFailedException;
 }

@@ -6,6 +6,7 @@ package net.endofinternet.raymoon.persistence.implementation;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.EntityManager;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGateway;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 
@@ -44,5 +45,11 @@ public class TableDataGatewayLookupImpl implements TableDataGatewayLookup {
         retValue = TableDataGatewayDecorator.addLogging(interfaceType, retValue);
 
         return retValue;
+    }
+
+    void setEntityManager(EntityManager entityManager) {
+       for ( TableDataGateway gateway : lookup.values()){
+           gateway.setEntityManager(entityManager);
+       }
     }
 }
