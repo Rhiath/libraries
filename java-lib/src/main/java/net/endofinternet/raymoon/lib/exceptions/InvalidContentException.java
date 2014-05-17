@@ -4,13 +4,11 @@
  */
 package net.endofinternet.raymoon.lib.exceptions;
 
-import net.endofinternet.raymoon.lib.ExceptionBase;
-
 /**
  *
  * @author raymoon
  */
-public class InvalidContentException extends ExceptionBase {
+public class InvalidContentException extends RuntimeException {
 
     public InvalidContentException(String message) {
         super(message);
