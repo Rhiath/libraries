@@ -7,7 +7,6 @@ package net.endofinternet.raymoon.lib.config;
 import java.util.Properties;
 import junit.framework.Assert;
 import org.junit.Test;
-import net.endofinternet.raymoon.lib.config.PropertiesConfig;
 
 /**
  *

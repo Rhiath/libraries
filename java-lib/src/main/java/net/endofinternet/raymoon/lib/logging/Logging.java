@@ -4,10 +4,10 @@
  */
 package net.endofinternet.raymoon.lib.logging;
 
+import java.util.Properties;
 import net.endofinternet.raymoon.lib.config.Config;
 import net.endofinternet.raymoon.lib.config.InvalidValueContentException;
 import net.endofinternet.raymoon.lib.config.NoSuchKeyException;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 

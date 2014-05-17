@@ -4,11 +4,10 @@
  */
 package net.endofinternet.raymoon.lib.components.lifecycle;
 
-import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.InvalidStateTransitionException;
 import net.endofinternet.raymoon.lib.Generic;
 import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.ConfigurationFailedException;
 import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.DisposeFailedException;
-import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.InitializationFailedException;
+import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.InvalidStateTransitionException;
 import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.PauseFailedException;
 import net.endofinternet.raymoon.lib.components.lifecycle.exceptions.StartFailedException;
 import net.endofinternet.raymoon.lib.config.ConfigProvider;

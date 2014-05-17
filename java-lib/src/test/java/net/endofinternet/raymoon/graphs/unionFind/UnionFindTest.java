@@ -4,12 +4,8 @@
  */
 package net.endofinternet.raymoon.graphs.unionFind;
 
-import net.endofinternet.raymoon.graphs.unionFind.UnionFind;
-import net.endofinternet.raymoon.graphs.unionFind.WeightedQuickUnionWithPathCompression;
 import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
-import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
 /**

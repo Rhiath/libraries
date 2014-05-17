@@ -4,9 +4,9 @@
  */
 package net.endofinternet.raymoon.lib.components;
 
-import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 import java.util.HashMap;
 import java.util.Map;
+import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 
 /**
  *

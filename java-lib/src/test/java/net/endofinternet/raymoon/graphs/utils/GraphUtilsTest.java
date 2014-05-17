@@ -5,9 +5,8 @@
 package net.endofinternet.raymoon.graphs.utils;
 
 import net.endofinternet.raymoon.graphs.*;
-import org.hamcrest.CoreMatchers;
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**

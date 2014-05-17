@@ -4,11 +4,11 @@
  */
 package de.raytec.java.lib.transmission;
 
-import net.endofinternet.raymoon.lib.transmission.TransmissionException;
-import net.endofinternet.raymoon.lib.transmission.Transmitter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
+import net.endofinternet.raymoon.lib.transmission.TransmissionException;
+import net.endofinternet.raymoon.lib.transmission.Transmitter;
 import org.junit.Assert;
 import org.junit.Test;
 

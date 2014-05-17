@@ -4,10 +4,10 @@
  */
 package net.endofinternet.raymoon.lib.config;
 
-import net.endofinternet.raymoon.lib.Generic;
-import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 import java.util.List;
 import java.util.Properties;
+import net.endofinternet.raymoon.lib.Generic;
+import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 
 /**
  *

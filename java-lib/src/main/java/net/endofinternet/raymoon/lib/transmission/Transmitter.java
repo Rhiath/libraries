@@ -4,10 +4,10 @@
  */
 package net.endofinternet.raymoon.lib.transmission;
 
-import net.endofinternet.raymoon.lib.logging.Logging;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import net.endofinternet.raymoon.lib.logging.Logging;
 
 /**
  * transfers all data from the input to the output

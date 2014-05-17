@@ -4,9 +4,9 @@
  */
 package net.endofinternet.raymoon.lib.config;
 
-import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 import java.util.LinkedList;
 import java.util.List;
+import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
 
 /**
  *

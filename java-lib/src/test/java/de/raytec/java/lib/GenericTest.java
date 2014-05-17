@@ -4,11 +4,11 @@
  */
 package de.raytec.java.lib;
 
-import net.endofinternet.raymoon.lib.Generic;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import junit.framework.Assert;
+import net.endofinternet.raymoon.lib.Generic;
 import org.junit.Test;
 
 

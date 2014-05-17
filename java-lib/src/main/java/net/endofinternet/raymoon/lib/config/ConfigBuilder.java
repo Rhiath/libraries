@@ -4,16 +4,14 @@
  */
 package net.endofinternet.raymoon.lib.config;
 
-import net.endofinternet.raymoon.lib.logging.Logging;
-import net.endofinternet.raymoon.lib.transmission.TransmissionException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.endofinternet.raymoon.lib.logging.Logging;
+import net.endofinternet.raymoon.lib.transmission.TransmissionException;
 
 /**
  *
