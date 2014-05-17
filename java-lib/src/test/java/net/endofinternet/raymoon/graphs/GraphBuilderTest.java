@@ -25,7 +25,7 @@ public class GraphBuilderTest {
     public void testEdges() {
         GraphBuilder builder = new GraphBuilder(100);
         
-        builder.addEdge(10, 12);
+        builder.addUndirectedEdge(10, 12);
         
         Graph graph = builder.getGraph();
         assertThat(graph.getNumberOfEdges(), is(2));

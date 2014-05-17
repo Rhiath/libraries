@@ -19,9 +19,9 @@ public class GraphUtilsTest {
     public void testDegree() {
         GraphBuilder builder = new GraphBuilder(20);
 
-        builder.addEdge(10, 12);
-        builder.addEdge(10, 11);
-        builder.addEdge(10, 13);
+        builder.addUndirectedEdge(10, 12);
+        builder.addUndirectedEdge(10, 11);
+        builder.addUndirectedEdge(10, 13);
 
         Graph graph = builder.getGraph();
         assertThat(GraphUtils.degree(graph, 10), is(3));
@@ -32,9 +32,9 @@ public class GraphUtilsTest {
     public void testMaxDegree() {
         GraphBuilder builder = new GraphBuilder(20);
 
-        builder.addEdge(10, 12);
-        builder.addEdge(10, 11);
-        builder.addEdge(10, 13);
+        builder.addUndirectedEdge(10, 12);
+        builder.addUndirectedEdge(10, 11);
+        builder.addUndirectedEdge(10, 13);
 
         Graph graph = builder.getGraph();
         assertThat(GraphUtils.maxDegree(graph), is(3));
@@ -44,9 +44,9 @@ public class GraphUtilsTest {
     public void testAverageDegree() {
         GraphBuilder builder = new GraphBuilder(4);
 
-        builder.addEdge(1, 2);
-        builder.addEdge(1, 1);
-        builder.addEdge(1, 3);
+        builder.addUndirectedEdge(1, 2);
+        builder.addUndirectedEdge(1, 1);
+        builder.addUndirectedEdge(1, 3);
 
         Graph graph = builder.getGraph();
         assertThat(GraphUtils.averageDegree(graph), is(6.0/4.0));

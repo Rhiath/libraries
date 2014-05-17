@@ -26,10 +26,13 @@ public class GraphBuilder {
         this.edgeCount = 0;
     }
 
-    public void addEdge(int vertexA, int vertexB) {
-        edgeCount += 2;
+    public void addUndirectedEdge(int vertexA, int vertexB) {
+        addDirectedEdge(vertexA, vertexB);
+        addDirectedEdge(vertexB, vertexA);
+    }
+    public void addDirectedEdge(int vertexA, int vertexB) {
+        edgeCount += 1;
         edges[vertexA].add(vertexB);
-        edges[vertexB].add(vertexA);
     }
 
     public Graph getGraph() {
