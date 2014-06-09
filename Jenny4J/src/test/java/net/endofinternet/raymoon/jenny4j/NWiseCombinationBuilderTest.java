@@ -20,61 +20,64 @@ import static org.junit.Assert.*;
  * @author Ray
  */
 public class NWiseCombinationBuilderTest {
-//
-//    @Test
-//    public void testOneValueDomain() {
-//        Domain domain = new Domain(1, 4);
-//        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain), 1).getCombinations();
-//
-//        Set<Integer> missingValues = Collections.asSet(0, 1, 2, 3);
-//
-//        for (Combination combination : combinations) {
-//            Assert.assertTrue(combination.getValues().size() == 1);
-//            Assert.assertTrue(combination.getValues().get(0).getPosition() == domain.getPosition());
-//            Assert.assertTrue(combination.getValues().get(0).getValue() >= 0);
-//            Assert.assertTrue(combination.getValues().get(0).getValue() < domain.getNumberOfPossibleValues());
-//
-//            Assert.assertTrue(missingValues.contains(combination.getValues().get(0).getValue()));
-//            missingValues.remove(combination.getValues().get(0).getValue());
-//        }
-//        assertThat(missingValues.size(), is(0));
-//    }
-//
-//    @Test
-//    public void tesTwoDomains() {
-//        Domain domain1 = new Domain(1, 2);
-//        Domain domain2 = new Domain(2, 2);
-//        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2), 1).getCombinations();
-//
-//        Set<Combination> missingCombinations = Collections.asSet(
-//                new Combination(Collections.asSet(new ValueForPosition(1, 0))),
-//                new Combination(Collections.asSet(new ValueForPosition(1, 1))),
-//                new Combination(Collections.asSet(new ValueForPosition(2, 0))),
-//                new Combination(Collections.asSet(new ValueForPosition(2, 1)))
-//        );
-//
-//        for (Combination combination : combinations) {
-//            Assert.assertTrue(combination.getValues().size() == 1);
-//
-//            final ValueForPosition vfp = combination.getValues().get(0);
-//
-//            Assert.assertTrue(vfp.getPosition() == 1 || vfp.getPosition() == 2);
-//
-//            Assert.assertTrue(combination.getValues().get(0).getValue() >= 0);
-//            Assert.assertTrue(combination.getValues().get(0).getValue() < 2);
-//
-//            Assert.assertTrue(missingCombinations.contains(combination));
-//            missingCombinations.remove(combination);
-//        }
-//        assertThat(missingCombinations.size(), is(0));
-//    }
+
+    @Test
+    public void testOneValueDomain() {
+        Domain domain = new Domain(1, 4);
+        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain), 1).getCombinations();
+
+        Set<Integer> missingValues = Collections.asSet(0, 1, 2, 3);
+
+        for (Combination combination : combinations) {
+            Assert.assertTrue(combination.getValues().size() == 1);
+            
+            ValueForPosition vfp = combination.getValues().iterator().next();
+            
+            Assert.assertTrue(vfp.getPosition() == domain.getPosition());
+            Assert.assertTrue(vfp.getValue() >= 0);
+            Assert.assertTrue(vfp.getValue() < domain.getNumberOfPossibleValues());
+
+            Assert.assertTrue(missingValues.contains(vfp.getValue()));
+            missingValues.remove(vfp.getValue());
+        }
+        assertThat(missingValues.size(), is(0));
+    }
+
+    @Test
+    public void tesTwoDomains() {
+        Domain domain1 = new Domain(1, 2);
+        Domain domain2 = new Domain(2, 2);
+        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2), 1).getCombinations();
+
+        Set<Combination> missingCombinations = Collections.asSet(
+                new Combination(Collections.asSet(new ValueForPosition(1, 0))),
+                new Combination(Collections.asSet(new ValueForPosition(1, 1))),
+                new Combination(Collections.asSet(new ValueForPosition(2, 0))),
+                new Combination(Collections.asSet(new ValueForPosition(2, 1)))
+        );
+
+        for (Combination combination : combinations) {
+            Assert.assertTrue(combination.getValues().size() == 1);
+
+            final ValueForPosition vfp = combination.getValues().iterator().next();
+
+            Assert.assertTrue(vfp.getPosition() == 1 || vfp.getPosition() == 2);
+
+            Assert.assertTrue(vfp.getValue() >= 0);
+            Assert.assertTrue(vfp.getValue() < 2);
+
+            Assert.assertTrue(missingCombinations.contains(combination));
+            missingCombinations.remove(combination);
+        }
+        assertThat(missingCombinations.size(), is(0));
+    }
 
     @Test
     public void testThreeDomainsPairwise() {
         Domain domain1 = new Domain(1, 2);
         Domain domain2 = new Domain(2, 2);
         Domain domain3 = new Domain(3, 2);
-        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2, domain3), 2).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2, domain3), 2).getCombinations();
 
         List<ValueForPosition> possibility = new LinkedList<ValueForPosition>();
         possibility.add(new ValueForPosition(1, 0));
@@ -106,7 +109,7 @@ public class NWiseCombinationBuilderTest {
         Domain domain1 = new Domain(1, 2);
         Domain domain2 = new Domain(2, 2);
         Domain domain3 = new Domain(3, 2);
-        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2, domain3), 3).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2, domain3), 3).getCombinations();
 
         List<ValueForPosition> possibility = new LinkedList<ValueForPosition>();
         possibility.add(new ValueForPosition(1, 0));

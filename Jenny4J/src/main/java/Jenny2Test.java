@@ -7,19 +7,13 @@
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import net.endofinternet.raymoon.jenny4j.BruteForceLookupBuilder3;
 import net.endofinternet.raymoon.jenny4j.Combination;
 import net.endofinternet.raymoon.jenny4j.CombinationUtils;
 import net.endofinternet.raymoon.jenny4j.ConstraintChecker;
 import net.endofinternet.raymoon.jenny4j.Domain;
-import net.endofinternet.raymoon.jenny4j.Jenny;
-import net.endofinternet.raymoon.jenny4j.Jenny2;
-import net.endofinternet.raymoon.jenny4j.Jenny3;
-import net.endofinternet.raymoon.jenny4j.Jenny4;
 import net.endofinternet.raymoon.jenny4j.Jenny5;
 import net.endofinternet.raymoon.jenny4j.NWiseCombinationBuilder2;
 import net.endofinternet.raymoon.jenny4j.ValueForPosition;
-import net.endofinternet.raymoon.utils.Collections;
 
 /**
  *
