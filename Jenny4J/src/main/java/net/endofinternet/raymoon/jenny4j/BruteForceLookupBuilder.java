@@ -16,7 +16,7 @@ import net.endofinternet.raymoon.utils.Collections;
  *
  * @author Ray
  */
-public class BruteForceLookupBuilder3 {
+public class BruteForceLookupBuilder {
 
     public static Map<Combination, List<Combination>> buildBruteForceLookup(List<Combination> bruteForce, List<Combination> uncoveredCombinations, int domainSize) {
         Map<Combination, List<Combination>> retValue = new HashMap<Combination, List<Combination>>();

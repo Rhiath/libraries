@@ -11,8 +11,8 @@ import net.endofinternet.raymoon.jenny4j.Combination;
 import net.endofinternet.raymoon.jenny4j.CombinationUtils;
 import net.endofinternet.raymoon.jenny4j.ConstraintChecker;
 import net.endofinternet.raymoon.jenny4j.Domain;
-import net.endofinternet.raymoon.jenny4j.Jenny5;
-import net.endofinternet.raymoon.jenny4j.NWiseCombinationBuilder2;
+import net.endofinternet.raymoon.jenny4j.Jenny;
+import net.endofinternet.raymoon.jenny4j.NWiseCombinationBuilder;
 import net.endofinternet.raymoon.jenny4j.ValueForPosition;
 
 /**
@@ -36,7 +36,7 @@ public class Jenny2Test {
 
         int n = 2;
         
-        Jenny5 jenny = new Jenny5(new ConstraintChecker() {
+        Jenny jenny = new Jenny(new ConstraintChecker() {
 
             public boolean isValid(Combination combination) {
                 return true;
@@ -47,7 +47,7 @@ public class Jenny2Test {
         System.out.println("solved with " + combinations.size() + " combinations");
 //        printSolution(combinations);
 
-        List<Combination> npairsToMatch = new NWiseCombinationBuilder2(domainList, n).getCombinations();
+        List<Combination> npairsToMatch = new NWiseCombinationBuilder(domainList, n).getCombinations();
         validate(combinations, npairsToMatch);
 
     }

@@ -20,12 +20,12 @@ import java.util.Set;
  *
  * @author Ray
  */
-public class Jenny5 {
+public class Jenny {
 
     private final ConstraintChecker checker;
     private final List<Domain> domains;
 
-    public Jenny5(ConstraintChecker checker, List<Domain> domains) {
+    public Jenny(ConstraintChecker checker, List<Domain> domains) {
         this.checker = checker;
         this.domains = new LinkedList<Domain>(domains);
     }
@@ -33,17 +33,17 @@ public class Jenny5 {
     public List<Combination> solve(int n) {
         List<Combination> retValue = new LinkedList<Combination>();
         System.out.println("building N-Pairs");
-        List<Combination> uncoveredCombinations = new NWiseCombinationBuilder2(domains, n).getCombinations();
+        List<Combination> uncoveredCombinations = new NWiseCombinationBuilder(domains, n).getCombinations();
         System.out.println("built " + uncoveredCombinations.size() + " N-Pairs");
         System.out.println("building brute force table");
-        List<Combination> bruteForce = new NWiseCombinationBuilder2(domains, domains.size()).getCombinations();
+        List<Combination> bruteForce = new NWiseCombinationBuilder(domains, domains.size()).getCombinations();
         System.out.println("built brute force table");
         Map<Combination, Set<Combination>> bruteForceByNPair;// = buildBruteForceLookup(bruteForce, uncoveredCombinations);
 
         System.out.println(uncoveredCombinations.size() + " combinations need to be covered in test cases");
 
         System.out.println("building brute force lookup");
-        bruteForceByNPair = convert(BruteForceLookupBuilder3.buildBruteForceLookup(bruteForce, uncoveredCombinations, n));
+        bruteForceByNPair = convert(BruteForceLookupBuilder.buildBruteForceLookup(bruteForce, uncoveredCombinations, n));
         System.out.println("built brute force lookup");
         while (!uncoveredCombinations.isEmpty() && !bruteForce.isEmpty()) {
 

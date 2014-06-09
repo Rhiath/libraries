@@ -24,7 +24,7 @@ public class NWiseCombinationBuilderTest {
     @Test
     public void testOneValueDomain() {
         Domain domain = new Domain(1, 4);
-        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain), 1).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain), 1).getCombinations();
 
         Set<Integer> missingValues = Collections.asSet(0, 1, 2, 3);
 
@@ -47,7 +47,7 @@ public class NWiseCombinationBuilderTest {
     public void tesTwoDomains() {
         Domain domain1 = new Domain(1, 2);
         Domain domain2 = new Domain(2, 2);
-        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2), 1).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2), 1).getCombinations();
 
         Set<Combination> missingCombinations = Collections.asSet(
                 new Combination(Collections.asSet(new ValueForPosition(1, 0))),
@@ -77,7 +77,7 @@ public class NWiseCombinationBuilderTest {
         Domain domain1 = new Domain(1, 2);
         Domain domain2 = new Domain(2, 2);
         Domain domain3 = new Domain(3, 2);
-        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2, domain3), 2).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2, domain3), 2).getCombinations();
 
         List<ValueForPosition> possibility = new LinkedList<ValueForPosition>();
         possibility.add(new ValueForPosition(1, 0));
@@ -109,7 +109,7 @@ public class NWiseCombinationBuilderTest {
         Domain domain1 = new Domain(1, 2);
         Domain domain2 = new Domain(2, 2);
         Domain domain3 = new Domain(3, 2);
-        List<Combination> combinations = new NWiseCombinationBuilder2(Collections.asList(domain1, domain2, domain3), 3).getCombinations();
+        List<Combination> combinations = new NWiseCombinationBuilder(Collections.asList(domain1, domain2, domain3), 3).getCombinations();
 
         List<ValueForPosition> possibility = new LinkedList<ValueForPosition>();
         possibility.add(new ValueForPosition(1, 0));

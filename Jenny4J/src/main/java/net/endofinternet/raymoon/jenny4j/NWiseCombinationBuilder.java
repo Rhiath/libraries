@@ -21,12 +21,12 @@ import java.util.Set;
  *
  * @author Ray
  */
-public class NWiseCombinationBuilder2 {
+public class NWiseCombinationBuilder {
 
     private final List<Domain> domains;
     private final int combinationSize;
 
-    public NWiseCombinationBuilder2(List<Domain> domains, int combinationSize) {
+    public NWiseCombinationBuilder(List<Domain> domains, int combinationSize) {
         this.domains = domains;
         this.combinationSize = combinationSize;
     }
