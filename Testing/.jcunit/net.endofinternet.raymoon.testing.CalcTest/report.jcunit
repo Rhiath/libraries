@@ -1,0 +1,57 @@
+***********************************************
+***                                         ***
+***          T E S T   M A T R I X          ***
+***                                         ***
+***********************************************
+
+* DOMAINS *
+  A:a(int)
+    00:'0'
+    01:'1'
+    02:'2'
+  B:b(int)
+    00:'0'
+    01:'1'
+    02:'2'
+
+* MATRIX *
+                      A ,B 
+  testrun[0]:         00,00
+  testrun[1]:         00,01
+  testrun[2]:         00,02
+  testrun[3]:         01,00
+  testrun[4]:         01,01
+  testrun[5]:         01,02
+  testrun[6]:         02,00
+  testrun[7]:         02,01
+  testrun[8]:         02,02
+
+***********************************************
+***                                         ***
+***          T E S T S U M M A R Y          ***
+***                                         ***
+***********************************************
+
+* TEST CLASS *
+  'class net.endofinternet.raymoon.testing.CalcTest'
+
+* TEST RESULT MATRIX *
+     LEVEL 0 PREDICATE             00    02    
+     LEVEL 1 PREDICATE                01    03 
+[NG ]test[0]                        T <F> -  - 
+[OK ]test[1]                        T  T  -  - 
+[NG ]test[2]                        T <F> -  - 
+[NG ]test[3]                        T <F> -  - 
+[NG ]test[4]                        T <F> -  - 
+[NG ]test[5]                        T <F> -  - 
+[NG ]test[6]                        T <F> -  - 
+[NG ]test[7]                        T <F> -  - 
+[NG ]test[8]                        T <F> -  - 
+
+* ALL TEST RULES *
+  #   T/  F   PREDICATE
+[00]  9/  0 - (alwaystrue)
+[01]  1/  8 -   (verify,(load,CalcTest/test[8],CalcTest.obj,c),(get,CalcTest.obj,c),DefaultVerifier.obj)
+[02]  0/  0 - (otherwise-2)
+[03]  0/  0 -   false
+

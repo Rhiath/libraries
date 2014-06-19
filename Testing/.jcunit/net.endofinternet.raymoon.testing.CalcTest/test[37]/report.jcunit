@@ -1,0 +1,28 @@
+***********************************************
+***                                         ***
+***           T E S T R E P O R T           ***
+***                                         ***
+***********************************************
+
+* TEST NAME *
+  'net.endofinternet.raymoon.testing.CalcTest/test[37]'
+
+* INPUT VALUES *
+  VALUES(2)
+    a:2147483647(int)
+    b:-1(int)
+
+* RULES *
+  [00]MATCHED:(alwaystrue)
+    [01]FAIL:(store,CalcTest/test[37],CalcTest@51,c)
+
+* RESULT *
+  FAILED
+
+* OUTPUT VALUES *
+  VALUES(1)
+    c:2147483646(int)
+
+* STORED VALUES *
+  VALUES(1)
+    c:2147483646(int)

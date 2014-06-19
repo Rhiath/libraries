@@ -1,0 +1,28 @@
+***********************************************
+***                                         ***
+***           T E S T R E P O R T           ***
+***                                         ***
+***********************************************
+
+* TEST NAME *
+  'net.endofinternet.raymoon.testing.CalcTest/test[11]'
+
+* INPUT VALUES *
+  VALUES(2)
+    a:0(int)
+    b:-100(int)
+
+* RULES *
+  [00]MATCHED:(alwaystrue)
+    [01]FAIL:(verify,(load,CalcTest/test[11],CalcTest@23,c),(get,CalcTest@23,c),DefaultVerifier@24)
+
+* RESULT *
+  FAILED
+
+* OUTPUT VALUES *
+  VALUES(1)
+    c:-100(int)
+
+* STORED VALUES *
+  VALUES(1)
+    c:-2147483648(int)
