@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayCommandExecutor;
-import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 
@@ -42,8 +41,6 @@ public class SingleThreadedTableDataGatewayCommandExecutor implements TableDataG
     }
 
     public synchronized void executeCommand(TableDateGatewayCommand commandToExecute) throws CommandExecutionFailedException {
-
-
 
         beginTransaction();
         try {

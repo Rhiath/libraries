@@ -16,7 +16,7 @@ public class AbstractTableDataGateway implements TableDataGateway {
     protected EntityManager entityManager;
 
     public void setEntityManager(EntityManager entityManager) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.entityManager = entityManager;
     }
     
 }
