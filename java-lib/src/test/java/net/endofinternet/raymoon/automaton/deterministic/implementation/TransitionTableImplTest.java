@@ -47,6 +47,14 @@ public class TransitionTableImplTest {
     /**
      * Test of getResultingState method, of class TransitionTableImpl.
      */
+    @Test(expected = InvalidValueContentException.class)
+    public void testDuplicateTransitionWithConstructor() throws InvalidValueContentException {
+        new TransitionTableImpl(new Transition(0, 0, 0), new Transition(0, 0, 0));
+    }
+
+    /**
+     * Test of getResultingState method, of class TransitionTableImpl.
+     */
     @Test
     public void testValidWithMultipleStatesAndSymbolsConstructor() throws InvalidValueContentException {
         new TransitionTableImpl(new Transition(0, 0, 0),
