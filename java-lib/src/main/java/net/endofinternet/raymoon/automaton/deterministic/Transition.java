@@ -4,30 +4,21 @@
  */
 package net.endofinternet.raymoon.automaton.deterministic;
 
+import net.endofinternet.raymoon.automaton.AbstractTransition;
+
 /**
  *
  * @author raymoon
  */
-public class Transition {
-
-    private final int originalState;
-    private final int resultingState;
+public class Transition extends AbstractTransition {
+    
     private final int bySymbol;
-
+    
     public Transition(int originalState, int resultingState, int bySymbol) {
-        this.originalState = originalState;
-        this.resultingState = resultingState;
+        super(originalState, resultingState);
         this.bySymbol = bySymbol;
     }
-
-    public int getOriginalState() {
-        return originalState;
-    }
-
-    public int getResultingState() {
-        return resultingState;
-    }
-
+    
     public int getBySymbol() {
         return bySymbol;
     }

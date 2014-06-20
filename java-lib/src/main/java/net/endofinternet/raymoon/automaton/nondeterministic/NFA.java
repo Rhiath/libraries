@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.automaton.deterministic;
+package net.endofinternet.raymoon.automaton.nondeterministic;
 
+import java.util.List;
 import net.endofinternet.raymoon.automaton.Automaton;
 
 /**
  *
  * @author raymoon
  */
-public interface DFA extends Automaton {
+public interface NFA extends Automaton {
 
-    public int getCurrentState();
+    public List<Integer> getCurrentStates();
 }
