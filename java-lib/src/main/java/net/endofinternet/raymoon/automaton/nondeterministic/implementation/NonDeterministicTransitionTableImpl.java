@@ -8,7 +8,6 @@ import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
 import net.endofinternet.raymoon.automaton.deterministic.Transition;
-import net.endofinternet.raymoon.automaton.nondeterministic.EpsilonTransition;
 import net.endofinternet.raymoon.automaton.nondeterministic.NonDeterministicTransitionTable;
 import net.endofinternet.raymoon.lib.config.InvalidValueContentException;
 import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
@@ -21,7 +20,7 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
 
     private final List<Integer>[][] table;
 
-    public NonDeterministicTransitionTableImpl(List<EpsilonTransition> epsilonTransitions, List<Transition> transitions) throws InvalidValueContentException {
+    public NonDeterministicTransitionTableImpl(List<Transition> transitions) throws InvalidValueContentException {
         int maxState = 0;
         int maxSymbol = 0;
 
@@ -45,9 +44,6 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
         table = (List<Integer>[][]) Array.newInstance(List.class, maxState + 1, maxSymbol + 1);
         markAllTransitionsAsUndefined();
         transitions = new LinkedList<Transition>(transitions);
-        epsilonTransitions = new LinkedList<EpsilonTransition>(epsilonTransitions);
-
-        eliminateEpsilonTransitions(transitions, epsilonTransitions);
         applyTransitions(transitions, table);
         rejectUndefinedTransitions();
 
@@ -91,18 +87,5 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
             }
 
         }
-    }
-
-    private void eliminateEpsilonTransitions(List<Transition> transitions, List<EpsilonTransition> epsilonTransitions) {
-        removeEpsilonCycles(transitions, epsilonTransitions);
-        removeEpsilonTransitions(transitions);
-    }
-
-    private void removeEpsilonCycles(List<Transition> transitions, List<EpsilonTransition> epsilonTransitions) {
-        
-    }
-
-    private void removeEpsilonTransitions(List<Transition> transitions) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
