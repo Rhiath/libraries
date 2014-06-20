@@ -2,11 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.automaton.deterministic.implementation;
+package net.endofinternet.raymoon.automaton.nondeterministic.implementation;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.List;
 import net.endofinternet.raymoon.automaton.deterministic.Transition;
-import net.endofinternet.raymoon.automaton.deterministic.TransitionTable;
+import net.endofinternet.raymoon.automaton.nondeterministic.EpsilonTransition;
+import net.endofinternet.raymoon.automaton.nondeterministic.NonDeterministicTransitionTable;
 import net.endofinternet.raymoon.lib.config.InvalidValueContentException;
 import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
 
@@ -14,12 +17,11 @@ import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
  *
  * @author raymoon
  */
-public class TransitionTableImpl implements TransitionTable {
-    private static int UNDEFIED_TRANSITION = -1;
+public class NonDeterministicTransitionTableImpl implements NonDeterministicTransitionTable {
 
-    private final int[][] table;
+    private final List<Integer>[][] table;
 
-    public TransitionTableImpl(Transition... transitions) throws InvalidValueContentException {
+    public NonDeterministicTransitionTableImpl(List<EpsilonTransition> epsilonTransitions, List<Transition> transitions) throws InvalidValueContentException {
         int maxState = 0;
         int maxSymbol = 0;
 
@@ -36,19 +38,23 @@ public class TransitionTableImpl implements TransitionTable {
             maxSymbol = Math.max(t.getBySymbol(), maxSymbol);
         }
 
-        if (transitions.length != (maxState+1) * (maxSymbol+1)) {
-            throw new InvalidValueContentException("missmatch in number of transistions, expected " + (maxState * maxSymbol) + " transitions, endountered " + transitions.length);
+        if (transitions.size() < (maxState + 1) * (maxSymbol + 1)) {
+            throw new InvalidValueContentException("missmatch in number of transistions, expected at least " + (maxState * maxSymbol) + " transitions, endountered " + transitions.size());
         }
 
-        table = new int[maxState+1][maxSymbol+1];
+        table = (List<Integer>[][]) Array.newInstance(List.class, maxState + 1, maxSymbol + 1);
         markAllTransitionsAsUndefined();
+        transitions = new LinkedList<Transition>(transitions);
+        epsilonTransitions = new LinkedList<EpsilonTransition>(epsilonTransitions);
+
+        eliminateEpsilonTransitions(transitions, epsilonTransitions);
         applyTransitions(transitions, table);
         rejectUndefinedTransitions();
 
     }
 
     @Override
-    public int getResultingState(int currentState, int inputSymbol) throws InvalidContentException {
+    public List<Integer> getResultingStates(int currentState, int inputSymbol) throws InvalidContentException {
         if (currentState >= table.length) {
             throw new InvalidContentException("state not known by transition table");
         }
@@ -56,31 +62,47 @@ public class TransitionTableImpl implements TransitionTable {
             throw new InvalidContentException("symbol not known by transition table");
         }
 
-        return table[currentState][inputSymbol];
+        return new LinkedList<Integer>(table[currentState][inputSymbol]);
     }
 
     private void rejectUndefinedTransitions() throws InvalidValueContentException {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[i].length; j++) {
-                if (table[i][j] == -1) {
+                if (table[i][j].isEmpty()) {
                     throw new InvalidValueContentException("transition from state " + i + " by symbol " + j + " is undefined");
                 }
             }
         }
     }
 
-    private static void applyTransitions(Transition[] transitions, int[][] transitionTable) {
+    private static void applyTransitions(List<Transition> transitions, List<Integer>[][] transitionTable) {
         for (Transition t : transitions) {
-            if ( transitionTable[t.getOriginalState()][t.getBySymbol()] != UNDEFIED_TRANSITION ){
-                throw new InvalidContentException("encountered duplicate transition for state "+t.getOriginalState()+" by symbol "+t.getBySymbol());
+            if (transitionTable[t.getOriginalState()][t.getBySymbol()].contains(t.getResultingState())) {
+                throw new InvalidContentException("encountered duplicate transition for state " + t.getOriginalState() + " by symbol " + t.getBySymbol() + " go state " + t.getResultingState());
             }
-            transitionTable[t.getOriginalState()][t.getBySymbol()] = t.getResultingState();
+            transitionTable[t.getOriginalState()][t.getBySymbol()].add(t.getResultingState());
         }
     }
 
     private void markAllTransitionsAsUndefined() {
-        for (int[] tableLine : table) {
-            Arrays.fill(tableLine, UNDEFIED_TRANSITION);
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                table[i][j] = new LinkedList<Integer>();
+            }
+
         }
+    }
+
+    private void eliminateEpsilonTransitions(List<Transition> transitions, List<EpsilonTransition> epsilonTransitions) {
+        removeEpsilonCycles(transitions, epsilonTransitions);
+        removeEpsilonTransitions(transitions);
+    }
+
+    private void removeEpsilonCycles(List<Transition> transitions, List<EpsilonTransition> epsilonTransitions) {
+        
+    }
+
+    private void removeEpsilonTransitions(List<Transition> transitions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

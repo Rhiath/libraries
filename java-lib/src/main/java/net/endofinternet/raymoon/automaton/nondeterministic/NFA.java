@@ -5,12 +5,13 @@
 package net.endofinternet.raymoon.automaton.nondeterministic;
 
 import java.util.List;
+import net.endofinternet.raymoon.automaton.Automaton;
 
 /**
  *
  * @author raymoon
  */
-public interface NonDeterministicTransitionTable {
+public interface NFA extends Automaton {
 
-    public List<Integer> getResultingStates(int currentState, int inputSymbol);
+    public List<Integer> getCurrentStates();
 }

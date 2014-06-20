@@ -4,14 +4,13 @@
  */
 package net.endofinternet.raymoon.automaton.deterministic;
 
+import net.endofinternet.raymoon.automaton.Automaton;
+
 /**
  *
  * @author raymoon
  */
-public interface DFA {
+public interface DFA extends Automaton {
+
     public int getCurrentState();
-    
-    public boolean isInAcceptState();
-    
-    public void consumeInput(int input);
 }
