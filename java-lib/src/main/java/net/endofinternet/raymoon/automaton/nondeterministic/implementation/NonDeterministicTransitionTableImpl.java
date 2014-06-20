@@ -71,10 +71,10 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
         }
     }
 
-    private static void applyTransitions(List<Transition> transitions, List<Integer>[][] transitionTable) {
+    private static void applyTransitions(List<Transition> transitions, List<Integer>[][] transitionTable) throws InvalidValueContentException {
         for (Transition t : transitions) {
             if (transitionTable[t.getOriginalState()][t.getBySymbol()].contains(t.getResultingState())) {
-                throw new InvalidContentException("encountered duplicate transition for state " + t.getOriginalState() + " by symbol " + t.getBySymbol() + " go state " + t.getResultingState());
+                throw new InvalidValueContentException("encountered duplicate transition for state " + t.getOriginalState() + " by symbol " + t.getBySymbol() + " go state " + t.getResultingState());
             }
             transitionTable[t.getOriginalState()][t.getBySymbol()].add(t.getResultingState());
         }
