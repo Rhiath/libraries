@@ -6,8 +6,7 @@ package net.endofinternet.raymoon.automaton.deterministic.implementation;
 
 import java.util.List;
 import net.endofinternet.raymoon.automaton.deterministic.DFA;
-import net.endofinternet.raymoon.automaton.deterministic.StateTransitionErrorHandler;
-import net.endofinternet.raymoon.automaton.deterministic.Transition;
+import net.endofinternet.raymoon.automaton.deterministic.TransitionTable;
 
 /**
  *
@@ -15,14 +14,12 @@ import net.endofinternet.raymoon.automaton.deterministic.Transition;
  */
 public class DFAImpl implements DFA {
 
-    private final StateTransitionErrorHandler errorHandler;
-    private final List<Transition> transistions;
+    private final TransitionTable transitionTable;
     private final List<Integer> acceptStates;
     private int currentState;
 
-    public DFAImpl(int initialState, StateTransitionErrorHandler errorHandler, List<Transition> transistions, List<Integer> acceptStates) {
-        this.errorHandler = errorHandler;
-        this.transistions = transistions;
+    public DFAImpl(int initialState, TransitionTable transitionTable, List<Integer> acceptStates) {
+        this.transitionTable = transitionTable;
         this.currentState = initialState;
         this.acceptStates = acceptStates;
     }
@@ -39,20 +36,6 @@ public class DFAImpl implements DFA {
 
     @Override
     public void consumeInput(int input) {
-        boolean knownTransition = false;
-        int resultingState = currentState;
-
-        for (Transition t : transistions) {
-            if (t.getOriginalState() == currentState && t.getBySymbol() == input) {
-                knownTransition = true;
-                resultingState = t.getResultingState();
-            }
-        }
-
-        if (!knownTransition) {
-            errorHandler.undefinedTransitionEncountered(currentState, input);
-        }
-
-        currentState = resultingState;
+        currentState = transitionTable.getResultingState(currentState, input);
     }
 }
