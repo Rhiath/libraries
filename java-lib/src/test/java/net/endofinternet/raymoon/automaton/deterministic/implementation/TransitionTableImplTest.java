@@ -6,10 +6,6 @@ package net.endofinternet.raymoon.automaton.deterministic.implementation;
 
 import net.endofinternet.raymoon.automaton.deterministic.Transition;
 import net.endofinternet.raymoon.lib.config.InvalidValueContentException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -19,22 +15,6 @@ import static org.hamcrest.CoreMatchers.*;
  * @author raymoon
  */
 public class TransitionTableImplTest {
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getResultingState method, of class TransitionTableImpl.
