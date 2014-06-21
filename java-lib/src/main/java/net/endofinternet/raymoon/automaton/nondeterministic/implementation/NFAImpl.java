@@ -26,8 +26,11 @@ public class NFAImpl implements NFA {
     public NFAImpl(List<Integer> initialStates, NonDeterministicTransitionTable transitionTable, List<Integer> acceptStates, ClosureProvider closureProvider) {
         this.transitionTable = transitionTable;
         this.acceptStates = acceptStates;
-        this.currentStates.addAll(initialStates);
         this.closureProvider = closureProvider;
+        
+        Set<Integer> newStatesWithClosure = getStatesIncludingClosure(new HashSet(initialStates));   
+        this.currentStates.clear();
+        this.currentStates.addAll(newStatesWithClosure);
     }
     
     @Override
@@ -42,12 +45,7 @@ public class NFAImpl implements NFA {
         for (Integer currentState : currentStates) {
             newStates.addAll(transitionTable.getResultingStates(currentState, input));
         }
-        
-        Set<Integer> newStatesWithClosure = new HashSet<Integer>(newStates);
-        
-        for (Integer newState : newStates) {
-            newStatesWithClosure.addAll(closureProvider.getClosure(newState));
-        }
+        Set<Integer> newStatesWithClosure = getStatesIncludingClosure(newStates);
         
         this.currentStates.clear();
         this.currentStates.addAll(newStatesWithClosure);
@@ -64,5 +62,29 @@ public class NFAImpl implements NFA {
         }
         
         return isAcceptState;
+    }
+
+    @Override
+    public void setStates(List<Integer> states) {
+        this.currentStates.clear();
+        this.currentStates.addAll(states);
+    }
+
+    @Override
+    public List<Integer> getAcceptStates() {
+       return new LinkedList<Integer>(acceptStates);
+    }
+
+    @Override
+    public int getInputValueLimit() {
+       return transitionTable.getInputValueLimit();
+    }
+
+    private Set<Integer> getStatesIncludingClosure(Set<Integer> newStates) {
+        Set<Integer> newStatesWithClosure = new HashSet<Integer>(newStates);
+        for (Integer newState : newStates) {
+            newStatesWithClosure.addAll(closureProvider.getClosure(newState));
+        }
+        return newStatesWithClosure;
     }
 }

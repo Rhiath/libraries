@@ -12,6 +12,10 @@ import net.endofinternet.raymoon.automaton.Automaton;
  * @author raymoon
  */
 public interface NFA extends Automaton {
+    
+    public int getInputValueLimit();
+    
+    public void setStates(List<Integer> states);
 
     public List<Integer> getCurrentStates();
 }

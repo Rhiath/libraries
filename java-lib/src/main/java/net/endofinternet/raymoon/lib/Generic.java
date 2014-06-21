@@ -101,4 +101,18 @@ public abstract class Generic {
         
         return retValue;
     }
+    
+    /**
+     * returns true if (and only if) collection a and b share a comment set of entries
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    public static boolean containsAny(Collection a, Collection b ){
+        Collection copyOfA = new LinkedList(a);
+        copyOfA.retainAll(b);
+        
+        return !copyOfA.isEmpty();
+    }
 }

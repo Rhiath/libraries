@@ -4,6 +4,7 @@
  */
 package net.endofinternet.raymoon.automaton.deterministic.implementation;
 
+import java.util.LinkedList;
 import java.util.List;
 import net.endofinternet.raymoon.automaton.deterministic.DFA;
 import net.endofinternet.raymoon.automaton.deterministic.TransitionTable;
@@ -37,5 +38,15 @@ public class DFAImpl implements DFA {
     @Override
     public void consumeInput(int input) {
         currentState = transitionTable.getResultingState(currentState, input);
+    }
+
+    @Override
+    public void setState(int state) {
+        this.currentState = state;
+    }
+
+    @Override
+    public List<Integer> getAcceptStates() {
+       return new LinkedList<Integer>(this.acceptStates);
     }
 }
