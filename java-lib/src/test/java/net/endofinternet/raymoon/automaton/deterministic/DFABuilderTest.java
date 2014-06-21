@@ -79,7 +79,7 @@ public class DFABuilderTest {
                 new Transition(3, 3, 1)));
         ClosureProvider closure = new ClosureProviderImpl(new EpsilonTransition(0, 1), new EpsilonTransition(1, 2));
 
-        NFA nfa = new NFAImpl(Generic.asList(0), transitionTable, Generic.asList(3), closure);
+        NFA nfa = new NFAImpl(Generic.asList(0), transitionTable, Generic.asList(2), closure);
 
         DFA dfa = new DFABuilder(nfa).computeDFA();
         assertThat(dfa.isInAcceptState(), is(true));
