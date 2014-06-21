@@ -13,4 +13,6 @@ import java.util.List;
 public interface NonDeterministicTransitionTable {
 
     public List<Integer> getResultingStates(int currentState, int inputSymbol);
+
+    public int getInputValueLimit();
 }

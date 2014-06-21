@@ -19,6 +19,7 @@ import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
 public class NonDeterministicTransitionTableImpl implements NonDeterministicTransitionTable {
 
     private final List<Integer>[][] table;
+    private final int inputValueLimit;
 
     public NonDeterministicTransitionTableImpl(List<Transition> transitions) throws InvalidValueContentException {
         int maxState = 0;
@@ -36,6 +37,7 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
             maxState = Math.max(t.getResultingState(), maxState);
             maxSymbol = Math.max(t.getBySymbol(), maxSymbol);
         }
+        this.inputValueLimit = maxSymbol + 1;
 
         if (transitions.size() < (maxState + 1) * (maxSymbol + 1)) {
             throw new InvalidValueContentException("missmatch in number of transistions, expected at least " + (maxState * maxSymbol) + " transitions, endountered " + transitions.size());
@@ -87,5 +89,10 @@ public class NonDeterministicTransitionTableImpl implements NonDeterministicTran
             }
 
         }
+    }
+
+    @Override
+    public int getInputValueLimit() {
+       return inputValueLimit;
     }
 }

@@ -11,6 +11,7 @@ import net.endofinternet.raymoon.automaton.Automaton;
  * @author raymoon
  */
 public interface DFA extends Automaton {
+    public void setState(int state);
 
     public int getCurrentState();
 }

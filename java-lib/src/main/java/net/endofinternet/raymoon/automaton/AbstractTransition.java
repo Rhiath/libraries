@@ -25,4 +25,4 @@ public abstract class AbstractTransition {
     public int getResultingState() {
         return resultingState;
     }
-}
+    }

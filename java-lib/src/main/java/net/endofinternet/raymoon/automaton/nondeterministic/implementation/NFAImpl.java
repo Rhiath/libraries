@@ -65,4 +65,20 @@ public class NFAImpl implements NFA {
         
         return isAcceptState;
     }
+
+    @Override
+    public void setStates(List<Integer> states) {
+        this.currentStates.clear();
+        this.currentStates.addAll(states);
+    }
+
+    @Override
+    public List<Integer> getAcceptStates() {
+       return new LinkedList<Integer>(acceptStates);
+    }
+
+    @Override
+    public int getInputValueLimit() {
+       return transitionTable.getInputValueLimit();
+    }
 }
