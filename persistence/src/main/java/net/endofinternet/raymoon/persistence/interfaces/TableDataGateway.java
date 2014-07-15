@@ -4,14 +4,10 @@
  */
 package net.endofinternet.raymoon.persistence.interfaces;
 
-import javax.persistence.EntityManager;
-
 /**
  *
  * @author raymoon
  */
 public interface TableDataGateway {
-
-    public void setEntityManager(EntityManager entityManager);
     
 }

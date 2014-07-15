@@ -4,7 +4,6 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
-import javax.persistence.EntityManager;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGateway;
 
 /**
@@ -12,11 +11,14 @@ import net.endofinternet.raymoon.persistence.interfaces.TableDataGateway;
  * @author raymoon
  */
 public class AbstractTableDataGateway implements TableDataGateway {
-    
-    protected EntityManager entityManager;
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    private final ConnectionProvider connectionProvider;
+
+    public AbstractTableDataGateway(ConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
     }
-    
+
+    protected ConnectionProvider getConnectionProvider() {
+        return connectionProvider;
+    }
 }

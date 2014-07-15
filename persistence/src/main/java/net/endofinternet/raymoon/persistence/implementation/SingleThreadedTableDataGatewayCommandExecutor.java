@@ -4,10 +4,11 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.sql.Connection;
+import java.sql.SQLException;
+import net.endofinternet.raymoon.lib.logging.Logging;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayCommandExecutor;
+import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 
@@ -17,41 +18,52 @@ import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecut
  */
 public class SingleThreadedTableDataGatewayCommandExecutor implements TableDataGatewayCommandExecutor {
 
-    private final EntityManager entityManager;
-    private final TableDataGatewayLookupImpl lookup;
+    private final TableDataGatewayLookup lookup;
+    private final ConnectionProvider connectionProvider;
 
-    public SingleThreadedTableDataGatewayCommandExecutor(TableDataGatewayLookupImpl lookup) {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("JPA");
-        entityManager = factory.createEntityManager();
+    public SingleThreadedTableDataGatewayCommandExecutor(TableDataGatewayLookup lookup, ConnectionProvider connectionProvider) {
         this.lookup = lookup;
-        
-        lookup.setEntityManager(entityManager);
+        this.connectionProvider = connectionProvider;
     }
 
-    public void beginTransaction() {
-        entityManager.getTransaction().begin();
+    public void beginTransaction(Connection connection) throws SQLException {
+        connection.setTransactionIsolation(Connection.TRANSACTION_NONE);
     }
 
-    public void commitTransaction() {
-        entityManager.getTransaction().commit();
+    public void commitTransaction(Connection connection) throws SQLException {
+        connection.commit();
     }
 
-    public void rollbackTransaction() {
-        entityManager.getTransaction().rollback();
+    public void rollbackTransaction(Connection connection) throws SQLException {
+        connection.rollback();
     }
 
+    @Override
     public synchronized void executeCommand(TableDateGatewayCommand commandToExecute) throws CommandExecutionFailedException {
 
-        beginTransaction();
+        Connection connection = connectionProvider.aquireConnection();
         try {
+            beginTransaction(connection);
             commandToExecute.executeCommand(lookup);
-            commitTransaction();
+            commitTransaction(connection);
         } catch (CommandExecutionFailedException ex) {
-            rollbackTransaction();
+            try {
+                rollbackTransaction(connection);
+            } catch (SQLException ex1) {
+                Logging.warn(this.getClass(), "failed torollback transaction", ex1);
+                throw new CommandExecutionFailedException("failed to roll back after error", ex);
+            }
             throw ex;
         } catch (Exception ex) {
-            rollbackTransaction();
+            try {
+                rollbackTransaction(connection);
+            } catch (SQLException ex1) {
+                Logging.warn(this.getClass(), "failed torollback transaction", ex1);
+                throw new CommandExecutionFailedException("failed to roll back after error", ex);
+            }
             throw new CommandExecutionFailedException("failed to execute command", ex);
+        } finally {
+            connectionProvider.releaseConnection();
         }
     }
 }

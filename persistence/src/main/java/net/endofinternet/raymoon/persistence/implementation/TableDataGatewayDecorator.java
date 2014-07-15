@@ -4,10 +4,10 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
-import de.raytec.java.lib.logging.Logging;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import net.endofinternet.raymoon.lib.logging.Logging;
 import net.endofinternet.raymoon.persistence.interfaces.Fetchable;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGateway;
 
@@ -31,6 +31,7 @@ public class TableDataGatewayDecorator {
 
     private static <T extends TableDataGateway> InvocationHandler buildLoggingHandler(final T toDecorate) {
         return new InvocationHandler() {
+            @Override
             public Object invoke(Object proxyObject, Method method, Object[] parameters) throws Throwable {
                 long t0 = System.currentTimeMillis();
                 try {
@@ -45,6 +46,7 @@ public class TableDataGatewayDecorator {
 
     private static <T extends Object> InvocationHandler buildFetchingHandler(final T toDecorate) {
         return new InvocationHandler() {
+            @Override
             public Object invoke(Object proxyObject, Method method, Object[] parameters) throws Throwable {
                 Object calculatedValue = method.invoke(toDecorate, parameters);
 
