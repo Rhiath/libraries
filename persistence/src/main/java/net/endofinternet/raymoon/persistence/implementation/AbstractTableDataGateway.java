@@ -4,6 +4,7 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
+import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGateway;
 
 /**

@@ -4,6 +4,7 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
+import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 import java.sql.Connection;
 import java.sql.SQLException;
 import net.endofinternet.raymoon.lib.logging.Logging;
