@@ -6,8 +6,7 @@
 package net.endofinternet.raymoon.datanode;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import net.endofinternet.raymoon.datanode.App.InvalidMessageTypeException;
 
 /**
  *
@@ -15,6 +14,7 @@ import java.io.ObjectOutputStream;
  */
 public interface ProtocolHandler {
 
-    public void handle(ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException;
+    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException;
 
+    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException;
 }

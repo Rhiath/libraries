@@ -15,9 +15,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
 import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
-import net.endofinternet.raymoon.datanode.messages.SupportedProtocolMessage;
 
 /**
  * Hello world!
@@ -36,7 +36,6 @@ public class App {
 
         final ProtocolHandlerFactory factory = buildFactory();
         new Thread() {
-
             @Override
             public void run() {
                 while (true) {
@@ -100,81 +99,53 @@ public class App {
     public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
-        writeMessage(oos, protocolHandlerFactory.getSupportedProtocols());
-        SupportedProtocolMessage supportedRemotely = getMessage(ois, SupportedProtocolMessage.class
-        );
 
-        SupportedProtocolMessage appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
+        MessageHandlerImpl messageHandler = new MessageHandlerImpl(ois, oos);
+        messageHandler.writeMessage(protocolHandlerFactory.getSupportedProtocols());
+        SupportedProtocols supportedRemotely = messageHandler.getMessage(SupportedProtocols.class);
+
+        SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
         protocolHandlerFactory.createHandler(appliedProtocol)
-                .handle(ois, oos);
+                .handle(messageHandler);
 
         return true;
     }
 
-    private static <T> T getMessage(ObjectInputStream ois, Class<T> aClass) throws InvalidMessageTypeException, IOException, ClassNotFoundException {
-        int length = ois.readInt();
-        byte[] data = new byte[length];
-        ois.readFully(data);
-        int length2 = ois.readInt();
-        byte[] data2 = new byte[length2];
-        ois.readFully(data2);
-        
-        if (!new String(data).equals(aClass.getCanonicalName())){
-            throw new InvalidMessageTypeException("expected "+aClass.getCanonicalName()+", encountered "+new String(data));
-        }
-        
-        System.out.println("reading: ("+new String(data)+") "+new String(data2));
-        
-        return new Gson().fromJson(new String(data2), aClass);
-        
-    }
-
-    private static void writeMessage(ObjectOutputStream oos, Object message) throws IOException {
-        String payload = new Gson().toJson(message);
-        System.out.println("writing: ("+message.getClass().getCanonicalName()+") "+payload);
-        oos.writeInt(message.getClass().getCanonicalName().length());
-        oos.write(message.getClass().getCanonicalName().getBytes());
-        oos.writeInt(payload.length());
-        oos.write(payload.getBytes());
-        oos.flush();
-    }
-
     private static ProtocolHandlerFactory buildFactory() {
         return new ProtocolHandlerFactory() {
-
             @Override
-            public ProtocolHandler createHandler(SupportedProtocolMessage commonProtocolStack) {
+            public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
                 return new ProtocolHandler() {
+                    @Override
+                    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
+                        messageHandler.writeMessage("hallo Welt!");
+                        String message = messageHandler.getMessage(String.class);
+                        
+                        System.out.println(message);
+                    }
 
                     @Override
-                    public void handle(ObjectInputStream ois, ObjectOutputStream oos) throws IOException {
-                        oos.writeObject("hallo Welt!!!");
-                        try {
-                            System.out.println("received: " + ois.readObject());
-
-                        } catch (ClassNotFoundException ex) {
-                            Logger.getLogger(App.class
-                                    .getName()).log(Level.SEVERE, null, ex);
-                        }
+                    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
+                        return true;
                     }
                 };
             }
 
-            public SupportedProtocolMessage getSupportedProtocols() {
-                return new SupportedProtocolMessage("dummy", "1");
+            @Override
+            public SupportedProtocols getSupportedProtocols() {
+                return new SupportedProtocols("dummy", "1");
             }
-
         };
 
     }
 
-    private static class InvalidMessageTypeException extends Exception {
+    public static class InvalidMessageTypeException extends Exception {
 
         public InvalidMessageTypeException() {
         }
 
-        private InvalidMessageTypeException(String message) {
+        public InvalidMessageTypeException(String message) {
             super(message);
         }
     }

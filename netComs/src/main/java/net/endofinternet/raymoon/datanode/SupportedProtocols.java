@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.messages;
+package net.endofinternet.raymoon.datanode;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,23 +12,23 @@ import java.util.List;
  *
  * @author Ray
  */
-public class SupportedProtocolMessage implements Serializable {
+public class SupportedProtocols {
 
     private final String protocol;
     private final String version;
 
-    private final List<SupportedProtocolMessage> subProtocols;
+    private final List<SupportedProtocols> subProtocols;
 
-    public SupportedProtocolMessage(String protocol, String version, SupportedProtocolMessage... subProtocols) {
+    public SupportedProtocols(String protocol, String version, SupportedProtocols... subProtocols) {
         this.protocol = protocol;
         this.version = version;
         this.subProtocols = new LinkedList<>();
-        for (SupportedProtocolMessage message : subProtocols) {
+        for (SupportedProtocols message : subProtocols) {
             this.subProtocols.add(message);
         }
     }
 
-    public List<SupportedProtocolMessage> getSubProtocols() {
+    public List<SupportedProtocols> getSubProtocols() {
         return subProtocols;
     }
 

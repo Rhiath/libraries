@@ -5,16 +5,14 @@
  */
 package net.endofinternet.raymoon.datanode;
 
-import net.endofinternet.raymoon.datanode.messages.SupportedProtocolMessage;
-
 /**
  *
  * @author Ray
  */
 public interface ProtocolHandlerFactory {
 
-    public ProtocolHandler createHandler(SupportedProtocolMessage commonProtocolStack);
+    public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack);
 
-    public SupportedProtocolMessage getSupportedProtocols();
+    public SupportedProtocols getSupportedProtocols();
 
 }
