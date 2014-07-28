@@ -15,15 +15,15 @@ import net.endofinternet.raymoon.datanode.ProtocolHandler;
  *
  * @author raymoon
  */
-public class ProtocolHandlerRouter implements ProtocolHandler {
-
+public class SequenceProtocolHandler implements ProtocolHandler {
+    
     private final List<ProtocolHandler> handlers;
 
-    public ProtocolHandlerRouter(List<ProtocolHandler> handlers) {
+    public SequenceProtocolHandler(List<ProtocolHandler> handlers) {
         this.handlers = new LinkedList<>(handlers);
     }
 
-    public ProtocolHandlerRouter(ProtocolHandler... handlers) {
+    public SequenceProtocolHandler(ProtocolHandler... handlers) {
         this.handlers = new LinkedList<>();
         for (ProtocolHandler handler : handlers) {
             this.handlers.add(handler);
@@ -32,27 +32,13 @@ public class ProtocolHandlerRouter implements ProtocolHandler {
 
     @Override
     public void handle(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
-        boolean handled = false;
-        for (ProtocolHandler handler : handlers) {
-            if (handler.responsibleForNextMessage(messageHandler)) {
-                handled = true;
-                handler.handle(messageHandler);
-            }
-        }
-
-        if (!handled) {
-            throw new App.InvalidMessageTypeException("no handler found responsible for message type '" + messageHandler.getNextMessageType() + "'");
+        for ( ProtocolHandler handler : handlers){
+            handler.handle(messageHandler);
         }
     }
 
     @Override
     public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
-        for (ProtocolHandler handler : handlers) {
-            if (handler.responsibleForNextMessage(messageHandler)) {
-                return true;
-            }
-        }
-
-        return false;
+        return handlers.get(0).responsibleForNextMessage(messageHandler);
     }
 }

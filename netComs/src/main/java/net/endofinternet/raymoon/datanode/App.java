@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
 import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
+import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
 
 /**
  * Hello world!
@@ -49,7 +50,7 @@ public class App {
                                 try (InputStream is = clientSocket.getInputStream()) {
                                     try (OutputStream os = clientSocket.getOutputStream()) {
                                         try {
-                                            return clientTask(is, os, factory);
+                                            return serviceTask(is, os, factory);
                                         } catch (InvalidMessageTypeException ex) {
                                             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
                                         } catch (ClassNotFoundException ex) {
@@ -96,19 +97,38 @@ public class App {
         }
     }
 
-    public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
+    public static boolean serviceTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
-        MessageHandlerImpl messageHandler = new MessageHandlerImpl(ois, oos);
+        MessageHandler messageHandler = new MessageHandlerImpl(ois, oos);
         messageHandler.writeMessage(protocolHandlerFactory.getSupportedProtocols());
         SupportedProtocols supportedRemotely = messageHandler.getMessage(SupportedProtocols.class);
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
-        protocolHandlerFactory.createHandler(appliedProtocol)
-                .handle(messageHandler);
+        protocolHandlerFactory.createHandler(appliedProtocol).handle(messageHandler);
+        System.out.println("end of service task");
 
+        return true;
+    }
+
+    public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        ObjectInputStream ois = new ObjectInputStream(is);
+
+        MessageHandler messageHandler = new MessageHandlerImpl(ois, oos);
+        messageHandler.writeMessage(protocolHandlerFactory.getSupportedProtocols());
+        SupportedProtocols supportedRemotely = messageHandler.getMessage(SupportedProtocols.class);
+
+        SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
+
+        messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
+        messageHandler.writeMessage("hallo");
+        messageHandler.writeMessage("welt");
+        messageHandler.writeMessage("!");
+
+        messageHandler.writeMessage(new LoopingProtocolHandler.EndOfLoop());
         return true;
     }
 
@@ -116,20 +136,18 @@ public class App {
         return new ProtocolHandlerFactory() {
             @Override
             public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
-                return new ProtocolHandler() {
+                return new LoopingProtocolHandler(new ProtocolHandler() {
                     @Override
                     public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                        messageHandler.writeMessage("hallo Welt!");
                         String message = messageHandler.getMessage(String.class);
-                        
-                        System.out.println(message);
+                        System.out.println("received message text: " + message);
                     }
 
                     @Override
                     public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                        return true;
+                        return messageHandler.getNextMessageType().equals(String.class.getCanonicalName());
                     }
-                };
+                });
             }
 
             @Override
