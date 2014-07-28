@@ -2,6 +2,7 @@ package net.endofinternet.raymoon.datanode;
 
 import com.barchart.udt.net.NetServerSocketUDT;
 import com.barchart.udt.net.NetSocketUDT;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -112,18 +113,31 @@ public class App {
     }
 
     private static <T> T getMessage(ObjectInputStream ois, Class<T> aClass) throws InvalidMessageTypeException, IOException, ClassNotFoundException {
-        Object incomin = ois.readObject();
-
-        if (!aClass.isInstance(incomin)) {
-            throw new InvalidMessageTypeException();
+        int length = ois.readInt();
+        byte[] data = new byte[length];
+        ois.readFully(data);
+        int length2 = ois.readInt();
+        byte[] data2 = new byte[length2];
+        ois.readFully(data2);
+        
+        if (!new String(data).equals(aClass.getCanonicalName())){
+            throw new InvalidMessageTypeException("expected "+aClass.getCanonicalName()+", encountered "+new String(data));
         }
-
-        return (T) incomin;
+        
+        System.out.println("reading: ("+new String(data)+") "+new String(data2));
+        
+        return new Gson().fromJson(new String(data2), aClass);
+        
     }
 
     private static void writeMessage(ObjectOutputStream oos, Object message) throws IOException {
-        System.out.println("writing: " + message);
-        oos.writeObject(message);
+        String payload = new Gson().toJson(message);
+        System.out.println("writing: ("+message.getClass().getCanonicalName()+") "+payload);
+        oos.writeInt(message.getClass().getCanonicalName().length());
+        oos.write(message.getClass().getCanonicalName().getBytes());
+        oos.writeInt(payload.length());
+        oos.write(payload.getBytes());
+        oos.flush();
     }
 
     private static ProtocolHandlerFactory buildFactory() {
@@ -158,6 +172,10 @@ public class App {
     private static class InvalidMessageTypeException extends Exception {
 
         public InvalidMessageTypeException() {
+        }
+
+        private InvalidMessageTypeException(String message) {
+            super(message);
         }
     }
 }
