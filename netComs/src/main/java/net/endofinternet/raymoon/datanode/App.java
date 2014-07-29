@@ -19,6 +19,7 @@ import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
 import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
 import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
+import net.endofinternet.raymoon.datanode.protocolHandlers.ParallelProtocolHandler;
 
 /**
  * Hello world!
@@ -123,11 +124,25 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
+        
         messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
-        messageHandler.writeMessage("hallo");
-        messageHandler.writeMessage("welt");
-        messageHandler.writeMessage("!");
+        messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(1));
+        messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(2));
 
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.StartOfLoop()));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, new LoopingProtocolHandler.StartOfLoop()));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "hallo 2"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "hallo 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "welt 2"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "welt 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "! 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "! 2"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.EndOfLoop()));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, new LoopingProtocolHandler.EndOfLoop()));
+
+
+        messageHandler.writeMessage(new ParallelProtocolHandler.EndThread(2));
+        messageHandler.writeMessage(new ParallelProtocolHandler.EndThread(1));
         messageHandler.writeMessage(new LoopingProtocolHandler.EndOfLoop());
         return true;
     }
@@ -135,19 +150,30 @@ public class App {
     private static ProtocolHandlerFactory buildFactory() {
         return new ProtocolHandlerFactory() {
             @Override
-            public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
-                return new LoopingProtocolHandler(new ProtocolHandler() {
+            public ProtocolHandler createHandler(final SupportedProtocols commonProtocolStack) {
+                return new LoopingProtocolHandler(new ParallelProtocolHandler(new ProtocolHandlerFactory() {
                     @Override
-                    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                        String message = messageHandler.getMessage(String.class);
-                        System.out.println("received message text: " + message);
+                    public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
+                        return new LoopingProtocolHandler(new ProtocolHandler() {
+                            @Override
+                            public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
+                                String message = messageHandler.getMessage(String.class);
+                                System.out.println("received message text: " + message);
+                            }
+
+                            @Override
+                            public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
+                                return messageHandler.getNextMessageType().equals(String.class.getCanonicalName());
+                            }
+                        });
                     }
 
                     @Override
-                    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                        return messageHandler.getNextMessageType().equals(String.class.getCanonicalName());
+                    public SupportedProtocols getSupportedProtocols() {
+                        return commonProtocolStack;
                     }
-                });
+                }, commonProtocolStack));
+
             }
 
             @Override

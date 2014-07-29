@@ -38,16 +38,16 @@ public class MessageHandlerImpl implements MessageHandler {
         nextMessageTypeRead = false;
         final String payload = getNextString();
 
-        System.out.println("reading: (" + messageType + ") " + payload);
+//        System.out.println("reading: (" + messageType + ") " + payload);
 
         return new Gson().fromJson(payload, aClass);
 
     }
 
     @Override
-    public void writeMessage(Object message) throws IOException {
+    public synchronized void writeMessage(Object message) throws IOException {
         String payload = new Gson().toJson(message);
-        System.out.println("writing: (" + message.getClass().getCanonicalName() + ") " + payload);
+//        System.out.println("writing: (" + message.getClass().getCanonicalName() + ") " + payload);
         oos.writeInt(message.getClass().getCanonicalName().length());
         oos.write(message.getClass().getCanonicalName().getBytes());
         oos.writeInt(payload.length());
