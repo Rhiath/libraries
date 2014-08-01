@@ -124,17 +124,17 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
-        
+
         messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
         messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(1));
         messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(2));
 
         messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.StartOfLoop()));
         messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, new LoopingProtocolHandler.StartOfLoop()));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "hallo 2"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "hallo 1"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "welt 2"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "welt 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "hallo 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "hallo 2"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "welt 1"));
+        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "welt 2"));
         messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "! 1"));
         messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "! 2"));
         messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.EndOfLoop()));
@@ -158,6 +158,11 @@ public class App {
                             @Override
                             public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
                                 String message = messageHandler.getMessage(String.class);
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                                 System.out.println("received message text: " + message);
                             }
 
@@ -191,6 +196,10 @@ public class App {
 
         public InvalidMessageTypeException(String message) {
             super(message);
+        }
+
+        public InvalidMessageTypeException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 }
