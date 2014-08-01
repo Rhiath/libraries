@@ -133,9 +133,8 @@ public class ParallelProtocolHandler implements ProtocolHandler {
         }
 
         @Override
-        public <T> T getMessage(Class<T> aClass) throws InvalidMessageTypeException, IOException {
-            String messageType;
-            String payload;
+        public byte[] getRawMessage() throws InvalidMessageTypeException, IOException {
+            byte[] payload;
             synchronized (queuedMessages) {
                 if (queuedMessages.isEmpty()) {
                     try {
@@ -149,19 +148,26 @@ public class ParallelProtocolHandler implements ProtocolHandler {
                     throw new IOException("thread has been disposed");
                 }
 
-                messageType = queuedMessages.get(0).messageType;
-                if (!messageType.equals(aClass.getCanonicalName())) {
-                    throw new App.InvalidMessageTypeException("expected " + aClass.getCanonicalName() + ", encountered " + messageType);
-                }
 
-                payload = queuedMessages.get(0).payload;
+
+                payload = queuedMessages.get(0).payload.getBytes();
 
                 queuedMessages.remove(0);
             }
 
 //            System.out.println("reading: (" + messageType + ") " + payload);
 
-            return new Gson().fromJson(payload, aClass);
+            return payload;
+        }
+
+        @Override
+        public <T> T getMessage(Class<T> aClass) throws InvalidMessageTypeException, IOException {
+            String messageType = getNextMessageType();
+            if (!messageType.equals(aClass.getCanonicalName())) {
+                throw new App.InvalidMessageTypeException("expected " + aClass.getCanonicalName() + ", encountered " + messageType);
+            }
+            
+            return new Gson().fromJson(new String(getRawMessage()), aClass);
         }
 
         @Override
@@ -192,6 +198,12 @@ public class ParallelProtocolHandler implements ProtocolHandler {
 
             messageHandler.writeMessage(fromThread);
         }
+        
+        @Override
+        public void writeMessage(String type, byte[] message) throws IOException {
+            messageHandler.writeMessage(type, message);
+        }
+        
 
         public void dispose() {
             disposed = true;
@@ -202,14 +214,15 @@ public class ParallelProtocolHandler implements ProtocolHandler {
         }
 
         public void enqueue(MessageToThread message) throws InvalidMessageTypeException {
-            if ( disposed ){
-                throw new InvalidMessageTypeException("thread with id '"+threadID+"' is already disposed, cannot enqueue further messages");
+            if (disposed) {
+                throw new InvalidMessageTypeException("thread with id '" + threadID + "' is already disposed, cannot enqueue further messages");
             }
             synchronized (queuedMessages) {
                 queuedMessages.add(message);
                 queuedMessages.notify();
             }
         }
+
     }
 
     public static class StartThread {

@@ -45,14 +45,16 @@ public class MessageHandlerImpl implements MessageHandler {
     }
 
     @Override
-    public synchronized void writeMessage(Object message) throws IOException {
+    public synchronized byte[] getRawMessage() throws App.InvalidMessageTypeException, IOException {
+        String messageType = getNextMessageType();
+        nextMessageTypeRead = false;
+        return getNextBytes();
+    }
+
+    @Override
+    public void writeMessage(Object message) throws IOException {
         String payload = new Gson().toJson(message);
-//        System.out.println("writing: (" + message.getClass().getCanonicalName() + ") " + payload);
-        oos.writeInt(message.getClass().getCanonicalName().length());
-        oos.write(message.getClass().getCanonicalName().getBytes());
-        oos.writeInt(payload.length());
-        oos.write(payload.getBytes());
-        oos.flush();
+        writeMessage(message.getClass().getCanonicalName(), payload.getBytes());
     }
 
     @Override
@@ -65,10 +67,24 @@ public class MessageHandlerImpl implements MessageHandler {
         return nextMessageType;
     }
 
-    private String getNextString() throws IOException {
+    private byte[] getNextBytes() throws IOException {
         int length = ois.readInt();
         byte[] data = new byte[length];
         ois.readFully(data);
-        return new String(data);
+        return data;
     }
+
+    private String getNextString() throws IOException {
+        return new String(getNextBytes());
+    }
+
+    @Override
+    public synchronized  void writeMessage(String type, byte[] payload) throws IOException {
+
+//        System.out.println("writing: (" + message.getClass().getCanonicalName() + ") " + payload);
+        oos.writeInt(type.length());
+        oos.write(type.getBytes());
+        oos.writeInt(payload.length);
+        oos.write(payload);
+        oos.flush();    }
 }

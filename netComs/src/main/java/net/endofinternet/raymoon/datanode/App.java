@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
 import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
+import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingMessageHandler;
+import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.ParallelProtocolHandler;
 
@@ -108,6 +110,8 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
+//        messageHandler = new CompressingMessageHandler(messageHandler);
+        
         protocolHandlerFactory.createHandler(appliedProtocol).handle(messageHandler);
         System.out.println("end of service task");
 
@@ -124,6 +128,7 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
+        messageHandler = new CompressingMessageHandler(messageHandler); // start compression
 
         messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
         messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(1));
@@ -151,18 +156,14 @@ public class App {
         return new ProtocolHandlerFactory() {
             @Override
             public ProtocolHandler createHandler(final SupportedProtocols commonProtocolStack) {
-                return new LoopingProtocolHandler(new ParallelProtocolHandler(new ProtocolHandlerFactory() {
+                return new CompressingProtocolHandler(new LoopingProtocolHandler(new ParallelProtocolHandler(new ProtocolHandlerFactory() {
                     @Override
                     public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
                         return new LoopingProtocolHandler(new ProtocolHandler() {
                             @Override
                             public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
                                 String message = messageHandler.getMessage(String.class);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                               
                                 System.out.println("received message text: " + message);
                             }
 
@@ -177,7 +178,7 @@ public class App {
                     public SupportedProtocols getSupportedProtocols() {
                         return commonProtocolStack;
                     }
-                }, commonProtocolStack));
+                }, commonProtocolStack)));
 
             }
 

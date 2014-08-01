@@ -14,8 +14,11 @@ public interface MessageHandler {
 
     <T> T getMessage(Class<T> aClass) throws App.InvalidMessageTypeException, IOException;
 
+    byte[] getRawMessage() throws App.InvalidMessageTypeException, IOException;
+
     String getNextMessageType() throws IOException;
 
     void writeMessage(Object message) throws IOException;
+    void writeMessage(String type, byte[] message) throws IOException;
     
 }
