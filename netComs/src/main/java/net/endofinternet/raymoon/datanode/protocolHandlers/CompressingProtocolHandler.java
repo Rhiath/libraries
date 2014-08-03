@@ -4,6 +4,7 @@
  */
 package net.endofinternet.raymoon.datanode.protocolHandlers;
 
+import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
 import java.io.IOException;
 import net.endofinternet.raymoon.datanode.App;
 import net.endofinternet.raymoon.datanode.MessageHandler;

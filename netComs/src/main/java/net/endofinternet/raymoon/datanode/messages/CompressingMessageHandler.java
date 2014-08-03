@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.protocolHandlers;
+package net.endofinternet.raymoon.datanode.messages;
 
 import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;

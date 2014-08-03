@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
 import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
-import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingMessageHandler;
+import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.ParallelProtocolHandler;
