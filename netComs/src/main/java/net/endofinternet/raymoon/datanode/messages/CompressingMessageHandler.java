@@ -4,7 +4,6 @@
  */
 package net.endofinternet.raymoon.datanode.messages;
 
-import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,27 +18,12 @@ import net.endofinternet.raymoon.datanode.MessageHandler;
  *
  * @author raymoon
  */
-public class CompressingMessageHandler implements MessageHandler {
+public class CompressingMessageHandler extends AbstractMessageHandler {
 
     private final MessageHandler handler;
 
     public CompressingMessageHandler(MessageHandler handler) {
         this.handler = handler;
-    }
-
-    @Override
-    public <T> T getMessage(Class<T> aClass) throws App.InvalidMessageTypeException, IOException {
-        String messageType = getNextMessageType();
-
-        if (!messageType.equals(aClass.getCanonicalName())) {
-            throw new App.InvalidMessageTypeException("expected " + aClass.getCanonicalName() + ", encountered " + messageType);
-        }
-
-        final String payload = new String(getRawMessage());
-
-//        System.out.println("reading: (" + messageType + ") " + payload);
-
-        return new Gson().fromJson(payload, aClass);
     }
 
     @Override
@@ -50,11 +34,6 @@ public class CompressingMessageHandler implements MessageHandler {
     @Override
     public String getNextMessageType() throws IOException {
         return handler.getNextMessageType();
-    }
-
-    @Override
-    public void writeMessage(Object message) throws IOException {
-        writeMessage(message.getClass().getCanonicalName(), new Gson().toJson(message).getBytes());
     }
 
     @Override
