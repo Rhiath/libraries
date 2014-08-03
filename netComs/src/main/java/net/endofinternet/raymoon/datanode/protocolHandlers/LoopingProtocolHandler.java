@@ -6,6 +6,7 @@ package net.endofinternet.raymoon.datanode.protocolHandlers;
 
 import java.io.IOException;
 import net.endofinternet.raymoon.datanode.App;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import net.endofinternet.raymoon.datanode.MessageHandler;
 import net.endofinternet.raymoon.datanode.ProtocolHandler;
 
@@ -22,7 +23,7 @@ public class LoopingProtocolHandler implements ProtocolHandler {
     }
 
     @Override
-    public void handle(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         messageHandler.getMessage(StartOfLoop.class);
 
         while (nextMessageIsNotEndOfLoop(messageHandler)) {
@@ -33,7 +34,7 @@ public class LoopingProtocolHandler implements ProtocolHandler {
     }
 
     @Override
-    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         return messageHandler.getNextMessageType().equals(StartOfLoop.class.getCanonicalName());
     }
 

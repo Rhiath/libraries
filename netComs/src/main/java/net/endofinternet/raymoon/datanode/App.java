@@ -1,5 +1,6 @@
 package net.endofinternet.raymoon.datanode;
 
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import com.barchart.udt.net.NetServerSocketUDT;
 import com.barchart.udt.net.NetSocketUDT;
 import com.google.gson.Gson;
@@ -15,9 +16,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.endofinternet.raymoon.datanode.messages.MessageHandlerImpl;
-import net.endofinternet.raymoon.datanode.messages.NoCommonProtocolStackException;
-import net.endofinternet.raymoon.datanode.messages.ProtocolDenominator;
+import net.endofinternet.raymoon.datanode.messages.IOMessageHandler;
+import net.endofinternet.raymoon.datanode.messages.exceptions.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
@@ -104,7 +104,7 @@ public class App {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
-        MessageHandler messageHandler = new MessageHandlerImpl(ois, oos);
+        MessageHandler messageHandler = new IOMessageHandler(ois, oos);
         messageHandler.writeMessage(protocolHandlerFactory.getSupportedProtocols());
         SupportedProtocols supportedRemotely = messageHandler.getMessage(SupportedProtocols.class);
 
@@ -122,7 +122,7 @@ public class App {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
-        MessageHandler messageHandler = new MessageHandlerImpl(ois, oos);
+        MessageHandler messageHandler = new IOMessageHandler(ois, oos);
         messageHandler.writeMessage(protocolHandlerFactory.getSupportedProtocols());
         SupportedProtocols supportedRemotely = messageHandler.getMessage(SupportedProtocols.class);
 
@@ -188,19 +188,5 @@ public class App {
             }
         };
 
-    }
-
-    public static class InvalidMessageTypeException extends Exception {
-
-        public InvalidMessageTypeException() {
-        }
-
-        public InvalidMessageTypeException(String message) {
-            super(message);
-        }
-
-        public InvalidMessageTypeException(String message, Throwable cause) {
-            super(message, cause);
-        }
     }
 }

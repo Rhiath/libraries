@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import net.endofinternet.raymoon.datanode.App;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import net.endofinternet.raymoon.datanode.MessageHandler;
 import net.endofinternet.raymoon.datanode.ProtocolHandler;
 
@@ -31,7 +32,7 @@ public class ChoiceProtocolHandler implements ProtocolHandler {
     }
 
     @Override
-    public void handle(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         boolean handled = false;
         for (ProtocolHandler handler : handlers) {
             if (handler.responsibleForNextMessage(messageHandler)) {
@@ -41,12 +42,12 @@ public class ChoiceProtocolHandler implements ProtocolHandler {
         }
 
         if (!handled) {
-            throw new App.InvalidMessageTypeException("no handler found responsible for message type '" + messageHandler.getNextMessageType() + "'");
+            throw new InvalidMessageTypeException("no handler found responsible for message type '" + messageHandler.getNextMessageType() + "'");
         }
     }
 
     @Override
-    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         for (ProtocolHandler handler : handlers) {
             if (handler.responsibleForNextMessage(messageHandler)) {
                 return true;

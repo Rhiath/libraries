@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import net.endofinternet.raymoon.datanode.App;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import net.endofinternet.raymoon.datanode.MessageHandler;
 
 /**
@@ -27,7 +28,7 @@ public class CompressingMessageHandler extends AbstractMessageHandler {
     }
 
     @Override
-    public byte[] getRawMessage() throws App.InvalidMessageTypeException, IOException {
+    public byte[] getRawMessage() throws IOException {
         return decompress(handler.getRawMessage());
     }
 

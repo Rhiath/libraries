@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package net.endofinternet.raymoon.datanode.messages;
+package net.endofinternet.raymoon.datanode.messages.exceptions;
 
 /**
  *

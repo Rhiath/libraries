@@ -8,25 +8,26 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import net.endofinternet.raymoon.datanode.App;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 
 /**
  *
  * @author raymoon
  */
-public class MessageHandlerImpl extends AbstractMessageHandler {
+public class IOMessageHandler extends AbstractMessageHandler {
 
     private final ObjectInputStream ois;
     private final ObjectOutputStream oos;
     private String nextMessageType;
     private boolean nextMessageTypeRead = false;
 
-    public MessageHandlerImpl(ObjectInputStream ois, ObjectOutputStream oos) {
+    public IOMessageHandler(ObjectInputStream ois, ObjectOutputStream oos) {
         this.ois = ois;
         this.oos = oos;
     }
 
     @Override
-    public synchronized byte[] getRawMessage() throws App.InvalidMessageTypeException, IOException {
+    public synchronized byte[] getRawMessage() throws IOException {
         String messageType = getNextMessageType();
         nextMessageTypeRead = false;
         return getNextBytes();
@@ -54,12 +55,13 @@ public class MessageHandlerImpl extends AbstractMessageHandler {
     }
 
     @Override
-    public synchronized  void writeMessage(String type, byte[] payload) throws IOException {
+    public synchronized void writeMessage(String type, byte[] payload) throws IOException {
 
 //        System.out.println("writing: (" + message.getClass().getCanonicalName() + ") " + payload);
         oos.writeInt(type.length());
         oos.write(type.getBytes());
         oos.writeInt(payload.length);
         oos.write(payload);
-        oos.flush();    }
+        oos.flush();
+    }
 }

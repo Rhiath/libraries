@@ -6,7 +6,7 @@
 package net.endofinternet.raymoon.datanode;
 
 import java.io.IOException;
-import net.endofinternet.raymoon.datanode.App.InvalidMessageTypeException;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 
 /**
  *

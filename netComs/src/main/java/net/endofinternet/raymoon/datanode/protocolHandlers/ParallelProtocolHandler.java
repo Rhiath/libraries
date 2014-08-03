@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.endofinternet.raymoon.datanode.App;
-import net.endofinternet.raymoon.datanode.App.InvalidMessageTypeException;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import net.endofinternet.raymoon.datanode.MessageHandler;
 import net.endofinternet.raymoon.datanode.ProtocolHandler;
 import net.endofinternet.raymoon.datanode.ProtocolHandlerFactory;
@@ -31,7 +32,7 @@ public class ParallelProtocolHandler implements ProtocolHandler {
     }
 
     @Override
-    public void handle(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         if (messageHandler.getNextMessageType().equals(StartThread.class.getCanonicalName())) {
             handleThreadStart(messageHandler);
         } else if (messageHandler.getNextMessageType().equals(EndThread.class.getCanonicalName())) {
@@ -39,12 +40,12 @@ public class ParallelProtocolHandler implements ProtocolHandler {
         } else if (messageHandler.getNextMessageType().equals(MessageToThread.class.getCanonicalName())) {
             handleThreadMessage(messageHandler);
         } else {
-            throw new App.InvalidMessageTypeException("encountered unsupported message type '" + messageHandler.getNextMessageType() + "'");
+            throw new InvalidMessageTypeException("encountered unsupported message type '" + messageHandler.getNextMessageType() + "'");
         }
     }
 
     @Override
-    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
 
         return messageHandler.getNextMessageType().equals(StartThread.class.getCanonicalName())
                 || messageHandler.getNextMessageType().equals(EndThread.class.getCanonicalName())
@@ -133,7 +134,7 @@ public class ParallelProtocolHandler implements ProtocolHandler {
         }
 
         @Override
-        public byte[] getRawMessage() throws InvalidMessageTypeException, IOException {
+        public byte[] getRawMessage() throws IOException {
             byte[] payload;
             synchronized (queuedMessages) {
                 if (queuedMessages.isEmpty()) {
@@ -164,7 +165,7 @@ public class ParallelProtocolHandler implements ProtocolHandler {
         public <T> T getMessage(Class<T> aClass) throws InvalidMessageTypeException, IOException {
             String messageType = getNextMessageType();
             if (!messageType.equals(aClass.getCanonicalName())) {
-                throw new App.InvalidMessageTypeException("expected " + aClass.getCanonicalName() + ", encountered " + messageType);
+                throw new InvalidMessageTypeException("expected " + aClass.getCanonicalName() + ", encountered " + messageType);
             }
             
             return new Gson().fromJson(new String(getRawMessage()), aClass);

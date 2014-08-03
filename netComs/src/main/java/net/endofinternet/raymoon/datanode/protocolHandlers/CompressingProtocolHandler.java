@@ -7,6 +7,7 @@ package net.endofinternet.raymoon.datanode.protocolHandlers;
 import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
 import java.io.IOException;
 import net.endofinternet.raymoon.datanode.App;
+import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
 import net.endofinternet.raymoon.datanode.MessageHandler;
 import net.endofinternet.raymoon.datanode.ProtocolHandler;
 
@@ -23,12 +24,12 @@ public class CompressingProtocolHandler implements ProtocolHandler {
     }
 
     @Override
-    public void handle(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         handler.handle(adapt(messageHandler));
     }
 
     @Override
-    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, App.InvalidMessageTypeException {
+    public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
         return handler.responsibleForNextMessage(adapt(messageHandler));
     }
 
