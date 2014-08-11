@@ -16,12 +16,15 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.endofinternet.raymoon.datanode.messages.AbstractMessageHandler;
 import net.endofinternet.raymoon.datanode.messages.IOMessageHandler;
 import net.endofinternet.raymoon.datanode.messages.exceptions.NoCommonProtocolStackException;
 import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
 import net.endofinternet.raymoon.datanode.protocolHandlers.ParallelProtocolHandler;
+import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler;
+import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.ProxyBuilder;
 
 /**
  * Hello world!
@@ -96,6 +99,8 @@ public class App {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoCommonProtocolStackException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -111,14 +116,14 @@ public class App {
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
 //        messageHandler = new CompressingMessageHandler(messageHandler);
-        
+
         protocolHandlerFactory.createHandler(appliedProtocol).handle(messageHandler);
         System.out.println("end of service task");
 
         return true;
     }
 
-    public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
+    public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException, Exception {
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
@@ -128,58 +133,35 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
-        messageHandler = new CompressingMessageHandler(messageHandler); // start compression
+//        messageHandler = new CompressingMessageHandler(messageHandler); // start compression
 
         messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
-        messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(1));
-        messageHandler.writeMessage(new ParallelProtocolHandler.StartThread(2));
 
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.StartOfLoop()));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, new LoopingProtocolHandler.StartOfLoop()));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "hallo 1"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "hallo 2"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "welt 1"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "welt 2"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, "! 1"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, "! 2"));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(1, new LoopingProtocolHandler.EndOfLoop()));
-        messageHandler.writeMessage(new ParallelProtocolHandler.MessageToThread(2, new LoopingProtocolHandler.EndOfLoop()));
+        TestInterface instance = ProxyBuilder.invoke(TestInterface.class, messageHandler);
 
-
-        messageHandler.writeMessage(new ParallelProtocolHandler.EndThread(2));
-        messageHandler.writeMessage(new ParallelProtocolHandler.EndThread(1));
+        instance.anotherMethod();
+        System.out.println(instance.halloWelt());
         messageHandler.writeMessage(new LoopingProtocolHandler.EndOfLoop());
+
         return true;
+    }
+
+    public static interface TestInterface {
+
+        public int halloWelt() throws Exception;
+
+        public void anotherMethod();
     }
 
     private static ProtocolHandlerFactory buildFactory() {
         return new ProtocolHandlerFactory() {
             @Override
             public ProtocolHandler createHandler(final SupportedProtocols commonProtocolStack) {
-                return new CompressingProtocolHandler(new LoopingProtocolHandler(new ParallelProtocolHandler(new ProtocolHandlerFactory() {
-                    @Override
-                    public ProtocolHandler createHandler(SupportedProtocols commonProtocolStack) {
-                        return new LoopingProtocolHandler(new ProtocolHandler() {
-                            @Override
-                            public void handle(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                                String message = messageHandler.getMessage(String.class);
-                               
-                                System.out.println("received message text: " + message);
-                            }
+                InvocationHandler handler = new InvocationHandler();
 
-                            @Override
-                            public boolean responsibleForNextMessage(MessageHandler messageHandler) throws IOException, InvalidMessageTypeException {
-                                return messageHandler.getNextMessageType().equals(String.class.getCanonicalName());
-                            }
-                        });
-                    }
+                handler.register(TestInterface.class, new MyTestImpl());
 
-                    @Override
-                    public SupportedProtocols getSupportedProtocols() {
-                        return commonProtocolStack;
-                    }
-                }, commonProtocolStack)));
-
+                return new LoopingProtocolHandler(handler);
             }
 
             @Override
