@@ -4,6 +4,7 @@
  */
 package net.endofinternet.raymoon.persistence.interfaces;
 
+import com.almworks.sqlite4java.SQLiteConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -13,7 +14,7 @@ import java.sql.SQLException;
  */
 public interface ConnectionProvider {
 
-    public Connection aquireConnection() throws SQLException;
+    public SQLiteConnection aquireConnection() throws SQLException;
 
     public void releaseConnection() throws SQLException;
 }

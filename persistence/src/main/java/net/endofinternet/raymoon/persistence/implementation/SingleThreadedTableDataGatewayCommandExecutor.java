@@ -4,9 +4,13 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
+import com.almworks.sqlite4java.SQLiteConnection;
+import com.almworks.sqlite4java.SQLiteException;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.endofinternet.raymoon.lib.logging.Logging;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayCommandExecutor;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
@@ -27,44 +31,28 @@ public class SingleThreadedTableDataGatewayCommandExecutor implements TableDataG
         this.connectionProvider = connectionProvider;
     }
 
-    public void beginTransaction(Connection connection) throws SQLException {
-        connection.setTransactionIsolation(Connection.TRANSACTION_NONE);
-    }
-
-    public void commitTransaction(Connection connection) throws SQLException {
-        connection.commit();
-    }
-
-    public void rollbackTransaction(Connection connection) throws SQLException {
-        connection.rollback();
-    }
-
     @Override
     public synchronized void executeCommand(TableDateGatewayCommand commandToExecute) throws CommandExecutionFailedException {
 
-        Connection connection = connectionProvider.aquireConnection();
         try {
-            beginTransaction(connection);
-            commandToExecute.executeCommand(lookup);
-            commitTransaction(connection);
-        } catch (CommandExecutionFailedException ex) {
+            SQLiteConnection connection = connectionProvider.aquireConnection();
+            connection.open(true);
+
             try {
-                rollbackTransaction(connection);
-            } catch (SQLException ex1) {
-                Logging.warn(this.getClass(), "failed torollback transaction", ex1);
-                throw new CommandExecutionFailedException("failed to roll back after error", ex);
+                connection.exec("BEGIN");
+                commandToExecute.executeCommand(lookup);
+                connection.exec("COMMIT");
+            } catch (CommandExecutionFailedException ex) {
+                connection.exec("ROLLBACK");
+                throw ex;
+            } catch (Exception ex) {
+                connection.exec("ROLLBACK");
+                throw new CommandExecutionFailedException("failed to execute command", ex);
+            } finally {
+                connection.dispose();
             }
-            throw ex;
-        } catch (Exception ex) {
-            try {
-                rollbackTransaction(connection);
-            } catch (SQLException ex1) {
-                Logging.warn(this.getClass(), "failed torollback transaction", ex1);
-                throw new CommandExecutionFailedException("failed to roll back after error", ex);
-            }
+        } catch (SQLException | SQLiteException ex) {
             throw new CommandExecutionFailedException("failed to execute command", ex);
-        } finally {
-            connectionProvider.releaseConnection();
         }
     }
 }

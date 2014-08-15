@@ -4,6 +4,8 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
+import com.almworks.sqlite4java.SQLiteConnection;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,17 +18,12 @@ import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 public class ConnectionProviderImpl implements ConnectionProvider {
 
     private int referenceCount = 0;
-    private Connection connection;
+    private SQLiteConnection connection;
 
     @Override
-    public synchronized Connection aquireConnection() throws SQLException {
+    public synchronized SQLiteConnection aquireConnection() throws SQLException {
         if (referenceCount == 0) {
-            try {
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection("jdbc:sqlite:test.db");
-            } catch (ClassNotFoundException ex) {
-                throw new SQLException("failed to aquite SQL connection", ex);
-            }
+            connection = new SQLiteConnection(new File("/tmp/database"));
         }
 
         referenceCount++;
@@ -39,7 +36,7 @@ public class ConnectionProviderImpl implements ConnectionProvider {
 
         referenceCount--;
         if (referenceCount == 0) {
-            connection.close();
+            connection.dispose();
         }
     }
 }
