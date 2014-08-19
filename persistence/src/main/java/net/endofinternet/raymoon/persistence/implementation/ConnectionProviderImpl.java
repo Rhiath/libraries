@@ -4,11 +4,10 @@
  */
 package net.endofinternet.raymoon.persistence.implementation;
 
+import com.almworks.sqlite4java.SQLite;
 import com.almworks.sqlite4java.SQLiteConnection;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 
 /**
@@ -16,14 +15,23 @@ import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
  * @author raymoon
  */
 public class ConnectionProviderImpl implements ConnectionProvider {
+    
+    static {
+         SQLite.setLibraryPath("target/lib");
+    }
 
     private int referenceCount = 0;
     private SQLiteConnection connection;
+    private final File storageLocation;
+
+    public ConnectionProviderImpl(File storageLocation) {
+       this.storageLocation = storageLocation;
+    }
 
     @Override
-    public synchronized SQLiteConnection aquireConnection() throws SQLException {
+    public synchronized SQLiteConnection aquireConnection() throws PersistenceException {
         if (referenceCount == 0) {
-            connection = new SQLiteConnection(new File("/tmp/database"));
+            connection = new SQLiteConnection(storageLocation);
         }
 
         referenceCount++;
@@ -32,7 +40,7 @@ public class ConnectionProviderImpl implements ConnectionProvider {
     }
 
     @Override
-    public synchronized void releaseConnection() throws SQLException {
+    public synchronized void releaseConnection() throws PersistenceException {
 
         referenceCount--;
         if (referenceCount == 0) {

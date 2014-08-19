@@ -6,12 +6,8 @@ package net.endofinternet.raymoon.persistence.implementation;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
+import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.endofinternet.raymoon.lib.logging.Logging;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayCommandExecutor;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
@@ -51,7 +47,7 @@ public class SingleThreadedTableDataGatewayCommandExecutor implements TableDataG
             } finally {
                 connection.dispose();
             }
-        } catch (SQLException | SQLiteException ex) {
+        } catch (PersistenceException | SQLiteException ex) {
             throw new CommandExecutionFailedException("failed to execute command", ex);
         }
     }
