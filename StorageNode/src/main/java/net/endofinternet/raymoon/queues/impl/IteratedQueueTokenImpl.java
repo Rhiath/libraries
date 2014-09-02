@@ -4,13 +4,13 @@
  */
 package net.endofinternet.raymoon.queues.impl;
 
-import net.endofinternet.raymoon.queues.IteratedQueueToken;
+import net.endofinternet.raymoon.queues.QueueToken;
 
 /**
  *
  * @author raymoon
  */
-class IteratedQueueTokenImpl<T> implements IteratedQueueToken<T> {
+class IteratedQueueTokenImpl<T> implements QueueToken<T> {
 
     private T value;
     private long id;

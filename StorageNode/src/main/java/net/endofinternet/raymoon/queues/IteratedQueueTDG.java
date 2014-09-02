@@ -17,9 +17,9 @@ public interface IteratedQueueTDG extends TableDataGateway {
 
     public <T> void enqueue(Class<T> type, T value) throws PersistenceException;
 
-    public <T> IteratedQueueToken<T> peekAtNextQueueElement(Class<T> type, String iteratorName) throws PersistenceException;
+    public <T> QueueToken<T> peekAtNextQueueElement(Class<T> type, String iteratorName) throws PersistenceException;
 
-    public void dequeue(IteratedQueueToken token) throws PersistenceException;
+    public void dequeue(QueueToken token) throws PersistenceException;
 
     void createTableIfMissing() throws PersistenceException;
 }

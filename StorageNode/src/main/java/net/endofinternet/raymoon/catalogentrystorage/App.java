@@ -16,7 +16,6 @@ import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 import net.endofinternet.raymoon.persistence.utilities.Tables;
 import net.endofinternet.raymoon.queues.IteratedQueueTDG;
-import net.endofinternet.raymoon.queues.IteratedQueueToken;
 import net.endofinternet.raymoon.queues.QueueTDG;
 import net.endofinternet.raymoon.queues.QueueToken;
 import net.endofinternet.raymoon.queues.impl.IteratedQueueTDGImpl;
@@ -71,7 +70,7 @@ public class App {
             @Override
             public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
                 try {
-                    IteratedQueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(IteratedQueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class, "2");
+                    QueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(IteratedQueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class, "2");
                     System.out.println(token.getValue().getD1());
                     System.out.println(token.getValue().getD2());
                     gatewayProvider.getGateway(IteratedQueueTDG.class).dequeue(token);
