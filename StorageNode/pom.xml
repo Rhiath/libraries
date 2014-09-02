@@ -109,5 +109,11 @@
             <version>2.2.4</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>net.endofinternet.raymoon</groupId>
+            <artifactId>PersistedQueues</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

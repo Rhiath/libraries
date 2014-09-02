@@ -15,11 +15,11 @@ import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 import net.endofinternet.raymoon.persistence.utilities.Tables;
-import net.endofinternet.raymoon.queues.IteratedQueueTDG;
-import net.endofinternet.raymoon.queues.QueueTDG;
-import net.endofinternet.raymoon.queues.QueueToken;
-import net.endofinternet.raymoon.queues.impl.IteratedQueueTDGImpl;
-import net.endofinternet.raymoon.queues.impl.QueueTDGImpl;
+import net.endofinternet.raymoon.persistedqueues.IteratedQueueTDG;
+import net.endofinternet.raymoon.persistedqueues.QueueTDG;
+import net.endofinternet.raymoon.persistedqueues.QueueToken;
+import net.endofinternet.raymoon.persistedqueues.impl.IteratedQueueTDGImpl;
+import net.endofinternet.raymoon.persistedqueues.impl.QueueTDGImpl;
 
 /**
  * Hello world!
