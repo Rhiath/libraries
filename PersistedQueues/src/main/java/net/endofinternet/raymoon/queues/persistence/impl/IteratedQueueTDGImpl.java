@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.persistedqueues.impl;
+package net.endofinternet.raymoon.queues.persistence.impl;
 
 import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
@@ -12,8 +12,8 @@ import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.implementation.AbstractTableDataGateway;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 import net.endofinternet.raymoon.persistence.utilities.Tables;
-import net.endofinternet.raymoon.persistedqueues.IteratedQueueTDG;
-import net.endofinternet.raymoon.persistedqueues.QueueToken;
+import net.endofinternet.raymoon.queues.persistence.IteratedQueueTDG;
+import net.endofinternet.raymoon.queues.persistence.QueueToken;
 
 /**
  *

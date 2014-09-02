@@ -15,11 +15,11 @@ import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 import net.endofinternet.raymoon.persistence.utilities.Tables;
-import net.endofinternet.raymoon.persistedqueues.IteratedQueueTDG;
-import net.endofinternet.raymoon.persistedqueues.QueueTDG;
-import net.endofinternet.raymoon.persistedqueues.QueueToken;
-import net.endofinternet.raymoon.persistedqueues.impl.IteratedQueueTDGImpl;
-import net.endofinternet.raymoon.persistedqueues.impl.QueueTDGImpl;
+import net.endofinternet.raymoon.queues.persistence.IteratedQueueTDG;
+import net.endofinternet.raymoon.queues.persistence.QueueTDG;
+import net.endofinternet.raymoon.queues.persistence.QueueToken;
+import net.endofinternet.raymoon.queues.persistence.impl.IteratedQueueTDGImpl;
+import net.endofinternet.raymoon.queues.persistence.impl.QueueTDGImpl;
 
 /**
  * Hello world!
@@ -66,35 +66,47 @@ public class App {
 //                }
 //            }
 //        });
+
         commandExecutor.executeCommand(new TableDateGatewayCommand() {
             @Override
             public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
                 try {
-                    QueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(IteratedQueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class, "2");
-                    System.out.println(token.getValue().getD1());
-                    System.out.println(token.getValue().getD2());
-                    gatewayProvider.getGateway(IteratedQueueTDG.class).dequeue(token);
+                    gatewayProvider.getGateway(QueueTDG.class).createTableIfMissing();
                 } catch (PersistenceException ex) {
                     Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-//
-//        for (int i = 0; i < 10000; i++) {
-//            log(i);
-//
-//            commandExecutor.executeCommand(new TableDateGatewayCommand() {
-//                @Override
-//                public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
-//                    try {
-//                        gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
-//                    } catch (PersistenceException ex) {
-//                        Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
+
+//        commandExecutor.executeCommand(new TableDateGatewayCommand() {
+//            @Override
+//            public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+//                try {
+//                    QueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(IteratedQueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class, "2");
+//                    System.out.println(token.getValue().getD1());
+//                    System.out.println(token.getValue().getD2());
+//                    gatewayProvider.getGateway(IteratedQueueTDG.class).dequeue(token);
+//                } catch (PersistenceException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
 //                }
-//            });
-//
-//        }
+//            }
+//        });
+
+        for (int i = 0; i < 10000; i++) {
+            log(i);
+
+            commandExecutor.executeCommand(new TableDateGatewayCommand() {
+                @Override
+                public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+                    try {
+                        gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
+                    } catch (PersistenceException ex) {
+                        Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+
+        }
 
 
     }

@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.persistedqueues.impl;
+package net.endofinternet.raymoon.queues.persistence.impl;
 
-import net.endofinternet.raymoon.persistedqueues.QueueToken;
+import net.endofinternet.raymoon.queues.persistence.QueueToken;
 
 /**
  *
