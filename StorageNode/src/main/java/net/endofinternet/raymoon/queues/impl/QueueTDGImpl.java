@@ -8,8 +8,6 @@ import com.almworks.sqlite4java.SQLiteConnection;
 import com.almworks.sqlite4java.SQLiteException;
 import com.almworks.sqlite4java.SQLiteStatement;
 import com.google.gson.Gson;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.implementation.AbstractTableDataGateway;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
@@ -27,6 +25,7 @@ public class QueueTDGImpl extends AbstractTableDataGateway implements QueueTDG {
         super(connectionProvider);
     }
 
+    @Override
     public <T> QueueToken<T> peekAtNextQueueElement(Class<T> type) throws PersistenceException {
         ConnectionProvider provider = super.getConnectionProvider();
         SQLiteConnection connection = provider.aquireConnection();
@@ -53,6 +52,7 @@ public class QueueTDGImpl extends AbstractTableDataGateway implements QueueTDG {
 
     }
 
+    @Override
     public void dequeue(QueueToken token) throws PersistenceException {
         if (token instanceof QueueTokenImpl) {
             QueueTokenImpl typedToken = (QueueTokenImpl) token;
@@ -74,6 +74,7 @@ public class QueueTDGImpl extends AbstractTableDataGateway implements QueueTDG {
      *
      * @throws PersistenceException
      */
+    @Override
     public void createTableIfMissing() throws PersistenceException {
         ConnectionProvider provider = super.getConnectionProvider();
         SQLiteConnection connection = provider.aquireConnection();
@@ -93,6 +94,7 @@ public class QueueTDGImpl extends AbstractTableDataGateway implements QueueTDG {
         }
     }
 
+    @Override
     public <T> void enqueue(Class<T> type, T value) throws PersistenceException {
         ConnectionProvider provider = super.getConnectionProvider();
         SQLiteConnection connection = provider.aquireConnection();

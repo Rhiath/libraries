@@ -24,6 +24,7 @@ class QueueTokenImpl<T> implements QueueToken<T> {
         return id;
     }
 
+    @Override
     public T getValue() {
         return value;
     }

@@ -15,41 +15,95 @@ import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
 import net.endofinternet.raymoon.persistence.interfaces.TableDateGatewayCommand;
 import net.endofinternet.raymoon.persistence.interfaces.exceptions.CommandExecutionFailedException;
 import net.endofinternet.raymoon.persistence.utilities.Tables;
+import net.endofinternet.raymoon.queues.IteratedQueueTDG;
+import net.endofinternet.raymoon.queues.IteratedQueueToken;
 import net.endofinternet.raymoon.queues.QueueTDG;
 import net.endofinternet.raymoon.queues.QueueToken;
+import net.endofinternet.raymoon.queues.impl.IteratedQueueTDGImpl;
 import net.endofinternet.raymoon.queues.impl.QueueTDGImpl;
 
 /**
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
 
     public static void main(String[] args) throws CommandExecutionFailedException {
-
+        Logger.getLogger("com.almworks.sqlite4java").setLevel(Level.OFF);
         ConnectionProvider connectionProvider = new ConnectionProviderImpl(new File("database.sqlite"));
         TableDataGatewayLookupImpl lookup = new TableDataGatewayLookupImpl();
         lookup.register(QueueTDG.class, new QueueTDGImpl(connectionProvider));
+        lookup.register(IteratedQueueTDG.class, new IteratedQueueTDGImpl(connectionProvider));
         lookup.register(net.endofinternet.raymoon.persistence.App.MyGateway.class, new net.endofinternet.raymoon.persistence.App.MyGatewayImpl(connectionProvider));
 
         SingleThreadedTableDataGatewayCommandExecutor commandExecutor = new SingleThreadedTableDataGatewayCommandExecutor(lookup, connectionProvider);
+//        commandExecutor.executeCommand(new TableDateGatewayCommand() {
+//            @Override
+//            public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+//                try {
+//                    gatewayProvider.getGateway(QueueTDG.class).createTableIfMissing();
+//
+//                    gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
+//                    QueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(QueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class);
+//                    System.out.println(token.getValue().getD1());
+//                    System.out.println(token.getValue().getD2());
+//                    gatewayProvider.getGateway(QueueTDG.class).dequeue(token);
+//                } catch (PersistenceException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
+
+//        commandExecutor.executeCommand(new TableDateGatewayCommand() {
+//            @Override
+//            public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+//                try {
+//                    gatewayProvider.getGateway(IteratedQueueTDG.class).createTableIfMissing();
+//                    gatewayProvider.getGateway(IteratedQueueTDG.class).createIterator(MyNiftyQueueElement.class, "1");
+//
+//                    gatewayProvider.getGateway(IteratedQueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
+//                } catch (PersistenceException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
         commandExecutor.executeCommand(new TableDateGatewayCommand() {
             @Override
             public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
                 try {
-                    gatewayProvider.getGateway(QueueTDG.class).createTableIfMissing();
-                    
-                    gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt",5));
-                    QueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(QueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class);
+                    IteratedQueueToken<MyNiftyQueueElement> token = gatewayProvider.getGateway(IteratedQueueTDG.class).peekAtNextQueueElement(MyNiftyQueueElement.class, "2");
                     System.out.println(token.getValue().getD1());
                     System.out.println(token.getValue().getD2());
-                    gatewayProvider.getGateway(QueueTDG.class).dequeue(token);
+                    gatewayProvider.getGateway(IteratedQueueTDG.class).dequeue(token);
                 } catch (PersistenceException ex) {
                     Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
+//
+//        for (int i = 0; i < 10000; i++) {
+//            log(i);
+//
+//            commandExecutor.executeCommand(new TableDateGatewayCommand() {
+//                @Override
+//                public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+//                    try {
+//                        gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
+//                    } catch (PersistenceException ex) {
+//                        Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            });
+//
+//        }
+
+
+    }
+
+    private static void log(int i) {
+        if (i % 100 == 0) {
+            System.out.println("stored " + i);
+        }
     }
 
     /**
@@ -66,14 +120,14 @@ public class App
             try {
                 SQLiteConnection connection = super.getConnectionProvider().aquireConnection();
 
-                if ( Tables.tableExists(connection, "A") ){
+                if (Tables.tableExists(connection, "A")) {
                     System.out.println("table exists");
                 } else {
                     System.out.println("table does not exist");
                 };
 
 
-            } catch ( PersistenceException ex) {
+            } catch (PersistenceException ex) {
                 Logger.getLogger(net.endofinternet.raymoon.persistence.App.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
