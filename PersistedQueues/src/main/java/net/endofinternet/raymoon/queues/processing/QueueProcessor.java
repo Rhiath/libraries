@@ -36,6 +36,12 @@ public class QueueProcessor<T> extends Thread {
         }
     }
 
+    public void newQueueElementAvailable() {
+        synchronized (sync) {
+            sync.notify();
+        }
+    }
+
     @Override
     public void run() {
         while (keepRunning) {
@@ -62,10 +68,10 @@ public class QueueProcessor<T> extends Thread {
 
     private boolean handleNextElement() {
         RetrieveNextQueueElement<T> command = new RetrieveNextQueueElement<T>();
-        
+
         try {
             commandExecutor.executeCommand(command);
-            
+
             handler.handlElement(command.retValue);
             return true;
         } catch (CommandExecutionFailedException ex) {
@@ -74,7 +80,7 @@ public class QueueProcessor<T> extends Thread {
     }
 
     private class RetrieveNextQueueElement<T> implements TableDateGatewayCommand {
-        
+
         private T retValue;
 
         public RetrieveNextQueueElement() {
