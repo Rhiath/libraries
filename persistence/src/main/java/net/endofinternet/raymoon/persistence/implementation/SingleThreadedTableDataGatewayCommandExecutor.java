@@ -32,22 +32,24 @@ public class SingleThreadedTableDataGatewayCommandExecutor implements TableDataG
 
         try {
             SQLiteConnection connection = connectionProvider.aquireConnection();
-            connection.open(true);
 
             try {
-                connection.exec("BEGIN");
-                commandToExecute.executeCommand(lookup);
-                connection.exec("COMMIT");
-            } catch (CommandExecutionFailedException ex) {
-                connection.exec("ROLLBACK");
-                throw ex;
-            } catch (Exception ex) {
-                connection.exec("ROLLBACK");
-                throw new CommandExecutionFailedException("failed to execute command", ex);
+                try {
+                    connection.exec("BEGIN");
+                    commandToExecute.executeCommand(lookup);
+                    connection.exec("COMMIT");
+                } catch (CommandExecutionFailedException ex) {
+                    connection.exec("ROLLBACK");
+                    throw ex;
+                } catch (Exception ex) {
+                    connection.exec("ROLLBACK");
+                    throw new CommandExecutionFailedException("failed to execute command", ex);
+                }
             } finally {
-                connection.dispose();
+                connectionProvider.releaseConnection();
             }
         } catch (PersistenceException | SQLiteException ex) {
+            ex.printStackTrace();
             throw new CommandExecutionFailedException("failed to execute command", ex);
         }
     }

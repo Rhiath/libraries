@@ -6,7 +6,10 @@ package net.endofinternet.raymoon.persistence.implementation;
 
 import com.almworks.sqlite4java.SQLite;
 import com.almworks.sqlite4java.SQLiteConnection;
+import com.almworks.sqlite4java.SQLiteException;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
 
@@ -15,23 +18,28 @@ import net.endofinternet.raymoon.persistence.interfaces.ConnectionProvider;
  * @author raymoon
  */
 public class ConnectionProviderImpl implements ConnectionProvider {
-    
-    static {
-         SQLite.setLibraryPath("target/lib");
-    }
 
+    static {
+        SQLite.setLibraryPath("target/lib");
+    }
     private int referenceCount = 0;
     private SQLiteConnection connection;
     private final File storageLocation;
 
     public ConnectionProviderImpl(File storageLocation) {
-       this.storageLocation = storageLocation;
+        this.storageLocation = storageLocation;
     }
 
     @Override
     public synchronized SQLiteConnection aquireConnection() throws PersistenceException {
+//        System.out.println("aquire connection when " + referenceCount + " references exist to a connection");
         if (referenceCount == 0) {
             connection = new SQLiteConnection(storageLocation);
+            try {
+                connection.open(true);
+            } catch (SQLiteException ex) {
+                throw new PersistenceException("failed to open connection", ex);
+            }
         }
 
         referenceCount++;
@@ -41,6 +49,7 @@ public class ConnectionProviderImpl implements ConnectionProvider {
 
     @Override
     public synchronized void releaseConnection() throws PersistenceException {
+//        System.out.println("releasing connection when " + referenceCount + " references exist to a connection");
 
         referenceCount--;
         if (referenceCount == 0) {
