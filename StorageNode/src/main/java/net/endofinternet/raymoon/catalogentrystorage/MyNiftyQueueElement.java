@@ -4,11 +4,13 @@
  */
 package net.endofinternet.raymoon.catalogentrystorage;
 
+import net.endofinternet.raymoon.catalogentrystorage.persistence.BusinessEntity;
+
 /**
  *
  * @author raymoon
  */
-public class MyNiftyQueueElement {
+public class MyNiftyQueueElement extends BusinessEntity {
 
     private String d1;
     private int d2;
@@ -16,7 +18,8 @@ public class MyNiftyQueueElement {
     public MyNiftyQueueElement() {
     }
 
-    public MyNiftyQueueElement(String d1, int d2) {
+    public MyNiftyQueueElement(String id, String d1, int d2) {
+        super(id);
         this.d1 = d1;
         this.d2 = d2;
     }

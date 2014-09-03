@@ -1,9 +1,13 @@
 package net.endofinternet.raymoon.catalogentrystorage;
 
 import com.almworks.sqlite4java.SQLiteConnection;
+import com.google.gson.Gson;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.endofinternet.raymoon.catalogentrystorage.persistence.BusinessEntity;
+import net.endofinternet.raymoon.catalogentrystorage.persistence.JsonEntityTDG;
+import net.endofinternet.raymoon.catalogentrystorage.persistence.impl.JsonEntityTDGImpl;
 import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.implementation.AbstractTableDataGateway;
 import net.endofinternet.raymoon.persistence.implementation.ConnectionProviderImpl;
@@ -33,6 +37,7 @@ public class App {
         TableDataGatewayLookupImpl lookup = new TableDataGatewayLookupImpl();
         lookup.register(QueueTDG.class, new QueueTDGImpl(connectionProvider));
         lookup.register(IteratedQueueTDG.class, new IteratedQueueTDGImpl(connectionProvider));
+        lookup.register(JsonEntityTDG.class, new JsonEntityTDGImpl(connectionProvider));
         lookup.register(net.endofinternet.raymoon.persistence.App.MyGateway.class, new net.endofinternet.raymoon.persistence.App.MyGatewayImpl(connectionProvider));
 
         SingleThreadedTableDataGatewayCommandExecutor commandExecutor = new SingleThreadedTableDataGatewayCommandExecutor(lookup, connectionProvider);
@@ -71,7 +76,13 @@ public class App {
             @Override
             public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
                 try {
-                    gatewayProvider.getGateway(QueueTDG.class).createTableIfMissing();
+                    gatewayProvider.getGateway(JsonEntityTDG.class).createTableIfMissing();
+                    String value = new Gson().toJson(new MyNiftyQueueElement("987", "hi", 2));
+                    gatewayProvider.getGateway(JsonEntityTDG.class).storeSerializsation("987", value);
+                    
+                   BusinessEntity entity = new Gson().fromJson(gatewayProvider.getGateway(JsonEntityTDG.class).getSerialisation("987"), BusinessEntity.class);
+                    System.out.println(entity.getId());
+                    System.out.println(entity.getType());
                 } catch (PersistenceException ex) {
                     Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -92,21 +103,21 @@ public class App {
 //            }
 //        });
 
-        for (int i = 0; i < 10000; i++) {
-            log(i);
-
-            commandExecutor.executeCommand(new TableDateGatewayCommand() {
-                @Override
-                public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
-                    try {
-                        gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
-                    } catch (PersistenceException ex) {
-                        Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
-
-        }
+//        for (int i = 0; i < 10000; i++) {
+//            log(i);
+//
+//            commandExecutor.executeCommand(new TableDateGatewayCommand() {
+//                @Override
+//                public void executeCommand(TableDataGatewayLookup gatewayProvider) throws CommandExecutionFailedException {
+//                    try {
+//                        gatewayProvider.getGateway(QueueTDG.class).enqueue(MyNiftyQueueElement.class, new MyNiftyQueueElement("hallo Welt", 5));
+//                    } catch (PersistenceException ex) {
+//                        Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                }
+//            });
+//
+//        }
 
 
     }
