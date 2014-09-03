@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode;
+package net.endofinternet.raymoon.netcoms;
 
-import net.endofinternet.raymoon.datanode.messages.exceptions.NoCommonProtocolStackException;
-import net.endofinternet.raymoon.datanode.SupportedProtocols;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.NoCommonProtocolStackException;
+import net.endofinternet.raymoon.netcoms.SupportedProtocols;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode;
+package net.endofinternet.raymoon.netcoms;
 
 import java.io.IOException;
-import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.InvalidMessageTypeException;
 
 /**
  *

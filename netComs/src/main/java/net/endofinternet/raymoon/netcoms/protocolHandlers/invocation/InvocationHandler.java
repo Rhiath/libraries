@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.protocolHandlers.invocation;
+package net.endofinternet.raymoon.netcoms.protocolHandlers.invocation;
 
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.endofinternet.raymoon.datanode.MessageHandler;
-import net.endofinternet.raymoon.datanode.ProtocolHandler;
-import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.netcoms.MessageHandler;
+import net.endofinternet.raymoon.netcoms.ProtocolHandler;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.InvalidMessageTypeException;
 
 /**
  *

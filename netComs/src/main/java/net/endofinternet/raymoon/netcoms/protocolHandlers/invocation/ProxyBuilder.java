@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.protocolHandlers.invocation;
+package net.endofinternet.raymoon.netcoms.protocolHandlers.invocation;
 
 import com.google.gson.Gson;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import net.endofinternet.raymoon.datanode.MessageHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler.Invocation;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler.InvocationException;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler.InvocationParameter;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler.InvocationResult;
+import net.endofinternet.raymoon.netcoms.MessageHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.InvocationHandler.Invocation;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.InvocationHandler.InvocationException;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.InvocationHandler.InvocationParameter;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.InvocationHandler.InvocationResult;
 
 /**
  *

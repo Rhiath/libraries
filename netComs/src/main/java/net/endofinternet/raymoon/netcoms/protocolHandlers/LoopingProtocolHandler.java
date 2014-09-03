@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.protocolHandlers;
+package net.endofinternet.raymoon.netcoms.protocolHandlers;
 
 import java.io.IOException;
-import net.endofinternet.raymoon.datanode.App;
-import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
-import net.endofinternet.raymoon.datanode.MessageHandler;
-import net.endofinternet.raymoon.datanode.ProtocolHandler;
+import net.endofinternet.raymoon.netcoms.App;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.netcoms.MessageHandler;
+import net.endofinternet.raymoon.netcoms.ProtocolHandler;
 
 /**
  *

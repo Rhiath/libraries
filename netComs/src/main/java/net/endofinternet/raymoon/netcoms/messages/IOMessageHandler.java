@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.endofinternet.raymoon.datanode.messages;
+package net.endofinternet.raymoon.netcoms.messages;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import net.endofinternet.raymoon.datanode.App;
-import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.netcoms.App;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.InvalidMessageTypeException;
 
 /**
  *

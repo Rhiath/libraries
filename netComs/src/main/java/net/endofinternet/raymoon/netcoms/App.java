@@ -1,30 +1,35 @@
-package net.endofinternet.raymoon.datanode;
+package net.endofinternet.raymoon.netcoms;
 
-import net.endofinternet.raymoon.datanode.messages.exceptions.InvalidMessageTypeException;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.InvalidMessageTypeException;
 import com.barchart.udt.net.NetServerSocketUDT;
 import com.barchart.udt.net.NetSocketUDT;
 import com.google.gson.Gson;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.endofinternet.raymoon.datanode.messages.AbstractMessageHandler;
-import net.endofinternet.raymoon.datanode.messages.IOMessageHandler;
-import net.endofinternet.raymoon.datanode.messages.exceptions.NoCommonProtocolStackException;
-import net.endofinternet.raymoon.datanode.messages.CompressingMessageHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.CompressingProtocolHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.LoopingProtocolHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.ParallelProtocolHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.InvocationHandler;
-import net.endofinternet.raymoon.datanode.protocolHandlers.invocation.ProxyBuilder;
+import net.endofinternet.raymoon.netcoms.messages.AbstractMessageHandler;
+import net.endofinternet.raymoon.netcoms.messages.IOMessageHandler;
+import net.endofinternet.raymoon.netcoms.messages.exceptions.NoCommonProtocolStackException;
+import net.endofinternet.raymoon.netcoms.messages.CompressingMessageHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.CompressingProtocolHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.LoopingProtocolHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.ParallelProtocolHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.InvocationHandler;
+import net.endofinternet.raymoon.netcoms.protocolHandlers.invocation.ProxyBuilder;
 
 /**
  * Hello world!
@@ -35,6 +40,60 @@ public class App {
     public static void main(String[] args) throws IOException {
         startServiceProvider(9000);
         startServiceConsumer(9001, new InetSocketAddress("localhost", 9000));
+        
+//        
+//        final ServerSocket ss = new ServerSocket(9000);
+//        final Socket cs = new Socket("localhost", 9000);
+        
+       
+        
+//        final PipedInputStream pis1 = new PipedInputStream(10240);
+//        final PipedInputStream pis2 = new PipedInputStream(10240);
+//        
+//        final PipedOutputStream pos1 = new PipedOutputStream(pis1);
+//        final PipedOutputStream pos2 = new PipedOutputStream(pis2);
+//        
+//        new Thread(){
+//
+//            @Override
+//            public void run() {
+//                final ProtocolHandlerFactory factory = buildFactory();
+//                try {
+//                    Socket s = ss.accept();
+//                    serviceTask(s.getInputStream(), s.getOutputStream(), factory);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (InvalidMessageTypeException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (ClassNotFoundException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (NoCommonProtocolStackException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }.start();
+//        
+//        
+//        new Thread(){
+//
+//            @Override
+//            public void run() {
+//                final ProtocolHandlerFactory factory = buildFactory();
+//                try {
+//                    clientTask(cs.getInputStream(), cs.getOutputStream(), factory);
+//                } catch (IOException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (InvalidMessageTypeException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (ClassNotFoundException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (NoCommonProtocolStackException ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (Exception ex) {
+//                    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }.start();
     }
 
     private static void startServiceProvider(int port) throws IOException {
@@ -106,6 +165,9 @@ public class App {
     }
 
     public static boolean serviceTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException {
+        is = new BufferedInputStream(is);
+//        os = new BufferedOutputStream(os);
+        
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
@@ -115,7 +177,7 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
-//        messageHandler = new CompressingMessageHandler(messageHandler);
+        messageHandler = new CompressingMessageHandler(messageHandler);
 
         protocolHandlerFactory.createHandler(appliedProtocol).handle(messageHandler);
         System.out.println("end of service task");
@@ -124,6 +186,9 @@ public class App {
     }
 
     public static boolean clientTask(InputStream is, OutputStream os, ProtocolHandlerFactory protocolHandlerFactory) throws IOException, InvalidMessageTypeException, ClassNotFoundException, NoCommonProtocolStackException, Exception {
+        is = new BufferedInputStream(is);
+        os = new BufferedOutputStream(os);
+        
         ObjectOutputStream oos = new ObjectOutputStream(os);
         ObjectInputStream ois = new ObjectInputStream(is);
 
@@ -133,17 +198,27 @@ public class App {
 
         SupportedProtocols appliedProtocol = ProtocolDenominator.getCommonDenominator(protocolHandlerFactory.getSupportedProtocols(), supportedRemotely);
 
-//        messageHandler = new CompressingMessageHandler(messageHandler); // start compression
+        messageHandler = new CompressingMessageHandler(messageHandler); // start compression
 
         messageHandler.writeMessage(new LoopingProtocolHandler.StartOfLoop());
 
         TestInterface instance = ProxyBuilder.invoke(TestInterface.class, messageHandler);
 
-        instance.anotherMethod();
-        System.out.println(instance.halloWelt());
+        for (int i = 0; i < 10000; i++) {
+            log(i);
+//            instance.anotherMethod();
+            instance.halloWelt();
+        }
+
         messageHandler.writeMessage(new LoopingProtocolHandler.EndOfLoop());
 
         return true;
+    }
+
+    private static void log(int i) {
+        if (i % 100 == 0) {
+            System.out.println(System.currentTimeMillis()+"  invoked " + i + " times");
+        }
     }
 
     public static interface TestInterface {
