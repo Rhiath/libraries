@@ -34,7 +34,7 @@ public class App {
             Vertex v2 = graph.addVertex(null);
 
             graph.addEdge(null, v1, v2, "owns");
-                        
+
             for (Edge e : v2.getEdges(Direction.BOTH, "owns")) {
                 System.out.println(e.getVertex(Direction.OUT).getId() + " --( " + e.getLabel() + " )--> " + e.getVertex(Direction.IN).getId());
             }

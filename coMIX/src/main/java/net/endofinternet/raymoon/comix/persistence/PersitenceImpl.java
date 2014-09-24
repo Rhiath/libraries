@@ -4,15 +4,11 @@
  */
 package net.endofinternet.raymoon.comix.persistence;
 
-import com.google.gson.Gson;
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import java.util.LinkedList;
 import java.util.List;
-import net.endofinternet.raymoon.comix.persistence.businessEntity.Comic;
-import net.endofinternet.raymoon.comix.persistence.businessEntity.File;
 
 /**
  *
@@ -30,15 +26,10 @@ public class PersitenceImpl implements Persistence {
         OrientGraph graph = factory.getTx();
         try {
             Vertex newLast = graph.addVertex(classType, properties);
-            newLast.setProperty("__isReplicationLast", true);
+            newLast.setProperty("__dbid", getNextReplicationPosition(graph));
+            newLast.setProperty("__replicationPos", newLast.getProperty("__dbid"));
+            newLast.setProperty("__version", 0);
 
-            Vertex lastVertex = getLastVertex();
-            if (lastVertex == null) {
-                newLast.setProperty("__isReplicationFirst", true);
-            } else {
-                lastVertex.removeProperty("__isReplicationLast");
-                graph.addEdge(null, lastVertex, newLast, "__replicationFollows");
-            }
 
             return new VertexRefImpl(newLast.getId().toString());
         } finally {
@@ -51,37 +42,66 @@ public class PersitenceImpl implements Persistence {
         OrientGraph graph = factory.getTx();
         try {
             Vertex current = graph.getVertex(((VertexRefImpl) reference).id);
-
-            if (current.getPropertyKeys().contains("__isReplicationFirst")) {
-                for (Edge e : current.getEdges(Direction.IN, "__replicationFollows")) {
-                    e.getVertex(Direction.IN).setProperty("__isReplicationFirst", true);
-                    graph.removeEdge(e);
-                }
+            String dbid = current.getProperty("__dbid");
+            long version = current.getProperty("__version");
+            for (String key : current.getPropertyKeys()) {
+                current.removeProperty(key);
             }
-
-            if (current.getPropertyKeys().contains("__isReplicationLast")) {
-                for (Edge e : current.getEdges(Direction.OUT, "__replicationFollows")) {
-                    e.getVertex(Direction.OUT).setProperty("__isReplicationLast", true);
-                    graph.removeEdge(e);
-                }
-            }
-
-            graph.removeVertex(current);
+            current.setProperty("__dbid", dbid);
+            current.setProperty("__replicationPos", getNextReplicationPosition(graph));
+            current.setProperty("__version", version + 1);
         } finally {
             graph.shutdown();
         }
     }
 
     public void updateVertex(VertexRef reference, Object... properties) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrientGraph graph = factory.getTx();
+        try {
+            Vertex current = graph.getVertex(((VertexRefImpl) reference).id);
+            String dbid = current.getProperty("__dbid");
+            long version = current.getProperty("__version");
+            for (String key : current.getPropertyKeys()) {
+                current.removeProperty(key);
+            }
+
+            for (int i = 0; i < properties.length; i += 2) {
+                current.setProperty((String) properties[i], properties[i + 1]);
+            }
+
+            current.setProperty("__dbid", dbid);
+            current.setProperty("__replicationPos", getNextReplicationPosition(graph));
+            current.setProperty("__version", version + 1);
+        } finally {
+            graph.shutdown();
+        }
     }
 
     public List<String> getVertexProperties(VertexRef reference) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrientGraph graph = factory.getTx();
+        try {
+            Vertex current = graph.getVertex(((VertexRefImpl) reference).id);
+            List<String> retValue = new LinkedList<String>();
+            retValue.addAll(current.getPropertyKeys());
+
+            retValue.remove("__dbid");
+            retValue.remove("__replicationPos");
+            retValue.remove("__version");
+
+            return retValue;
+        } finally {
+            graph.shutdown();
+        }
     }
 
     public <T> T getVertexProperty(VertexRef reference, String propertyName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrientGraph graph = factory.getTx();
+        try {
+            Vertex current = graph.getVertex(((VertexRefImpl) reference).id);
+            return current.getProperty(propertyName);
+        } finally {
+            graph.shutdown();
+        }
     }
 
     public EdgeRef storeEdge(String classType, VertexRef source, String attribute, VertexRef destination, Object... properties) {
@@ -112,8 +132,20 @@ public class PersitenceImpl implements Persistence {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private Vertex getLastVertex() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private long getNextReplicationPosition(OrientGraph graph) {
+        long nextID = 0;
+
+        for (Vertex v : graph.getVerticesOfClass("replicationCounter")) {
+            nextID = v.getProperty("lastPosition");
+            nextID++;
+            v.setProperty("lastPosition", nextID);
+        }
+
+        if (nextID == 0) {
+            graph.addVertex("replicationCounter", "lastPosition", 0);
+        }
+
+        return nextID;
     }
 
     private static class VertexRefImpl implements VertexRef {
