@@ -10,7 +10,9 @@ import java.util.List;
  *
  * @author raymoon
  */
-public interface Persistence {
+public interface PersistenceTransaction {
+    
+    public void dispose();
 
     public VertexRef storeVertex(String classType, Object... properties);
 
