@@ -19,6 +19,7 @@ public class ServiceProvider implements ServiceInterface {
 
     private final List<String> knownIDs = new LinkedList<>();
     private final Map<String, List<String>> childMapping = new HashMap<>();
+    private final List<Integer> openSlots = new LinkedList<>();
     private String root = null;
     private final ServiceObserver observer;
 
@@ -43,7 +44,12 @@ public class ServiceProvider implements ServiceInterface {
 
     @Override
     public void put(String id) {
-        knownIDs.add(id);
+        if (openSlots.isEmpty()) {
+            knownIDs.add(id);
+        } else {
+            Integer openSlot = openSlots.remove(0);
+            knownIDs.set(openSlot, id);
+        }
 
         rehash();
     }
@@ -61,13 +67,12 @@ public class ServiceProvider implements ServiceInterface {
                 String id2 = lowerLayerIds.remove(0);
 
                 String parentHash = hash(id1, id2);
-
-                List<String> children = new LinkedList<>();
-                children.add(id1);
-                children.add(id2);
+                List<String> children = computeChildren(id1, id2);
                 nextLayerIds.add(parentHash);
 
-                childMapping.put(parentHash, children);
+                if (parentHash != null && !childMapping.containsKey(parentHash)) {
+                    childMapping.put(parentHash, children);
+                }
             }
             if (!lowerLayerIds.isEmpty()) {
                 nextLayerIds.add(lowerLayerIds.get(0)); // if there are an odd number of IDs from the lower layer, we have to take over an ID
@@ -86,13 +91,37 @@ public class ServiceProvider implements ServiceInterface {
     }
 
     private String hash(String id1, String id2) {
-        return DigestUtils.md5Hex(id1 + "###" + id2);
+        if (id1 == null) {
+            if (id2 == null) {
+                return null;
+            } else {
+                return id2;
+            }
+        } else {
+            if (id2 == null) {
+                return id1;
+            } else {
+                return DigestUtils.md5Hex(id1 + "###" + id2);
+            }
+        }
     }
 
     @Override
     public void remove(String id) {
-        knownIDs.remove(id);
+        openSlots.add(knownIDs.indexOf(id));
+        knownIDs.set(knownIDs.indexOf(id), null);
 
         rehash();
+    }
+
+    private List<String> computeChildren(String id1, String id2) {
+        List<String> children = new LinkedList<>();
+
+        if (id1 != null && id2 != null) {
+            children.add(id1);
+            children.add(id2);
+        }
+
+        return children;
     }
 }

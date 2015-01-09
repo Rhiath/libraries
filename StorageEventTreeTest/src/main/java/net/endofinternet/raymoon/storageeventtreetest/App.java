@@ -11,13 +11,15 @@ public class App {
         ServiceProvider provider = new ServiceProvider(consumer);
         consumer.setProvider(new ServiceProviderLogger(provider));
 
-        int count = 10000;
+        int count = 1000;
         for (int i = 0; i < count; i++) {
             provider.put("" + i);
         }
 
-
         for (int i = 0; i < count; i++) {
+            if ( i == 4 ){
+                System.out.println("");
+            }
             provider.remove("" + i);
         }
     }

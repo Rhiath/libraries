@@ -70,6 +70,7 @@ public class ServiceConsumer implements ServiceObserver {
         for (String key : childMapping.keySet()) {
             if (childMapping.get(key).isEmpty()) {
                 knownIDs.add(key);
+//                System.out.println(key);
             }
         }
         System.out.println("now knowing about " + knownIDs.size() + " id(s)");
