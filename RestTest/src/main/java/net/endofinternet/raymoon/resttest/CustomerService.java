@@ -19,6 +19,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.cxf.configuration.security.AuthorizationPolicy;
+import org.apache.cxf.jaxrs.ext.MessageContext;
 
 @Path("/calc")
 public class CustomerService {
@@ -53,10 +55,12 @@ public class CustomerService {
 
     @GET
     @Path("/ratings/{id}")
-    public Response deleteRating(@PathParam("id") int id, @Context SecurityContext context) {
-        Principal principal = context.getUserPrincipal();
+    public Response deleteRating(@PathParam("id") int id, @Context MessageContext context) {
+        AuthorizationPolicy policy = (AuthorizationPolicy) context.get(AuthorizationPolicy.class.getCanonicalName());
 
-        System.out.println("username: " + principal.getName());
+
+        System.out.println(policy.getUserName());
+
         // code here: check if he is the owner of the rating
         // code here: deny the request or
         // code here: delete the rating
