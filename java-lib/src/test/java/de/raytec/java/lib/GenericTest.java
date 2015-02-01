@@ -7,6 +7,7 @@ package de.raytec.java.lib;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import junit.framework.Assert;
 import net.endofinternet.raymoon.lib.Generic;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class GenericTest {
 
     @Test
     public void nullArrayToList(){
-        Assert.assertTrue(Generic.asList(null) != null);
+        Assert.assertTrue(Generic.asList((Set) null) != null);
     }
     
     @Test
