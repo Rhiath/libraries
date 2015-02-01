@@ -4,8 +4,6 @@
  */
 package net.endofinternet.raymoon.queues.processing;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.endofinternet.raymoon.persistence.exceptions.PersistenceException;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayCommandExecutor;
 import net.endofinternet.raymoon.persistence.interfaces.TableDataGatewayLookup;
