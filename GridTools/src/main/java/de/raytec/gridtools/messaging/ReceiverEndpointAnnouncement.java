@@ -4,11 +4,11 @@
  */
 package de.raytec.gridtools.messaging;
 
-import de.raytec.java.lib.exceptions.InvalidContentException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
 
 /**
  *

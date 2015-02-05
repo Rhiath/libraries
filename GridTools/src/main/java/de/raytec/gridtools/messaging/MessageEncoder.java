@@ -4,7 +4,8 @@
  */
 package de.raytec.gridtools.messaging;
 
-import de.raytec.java.lib.exceptions.InvalidContentException;
+import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
+
 
 /**
  *

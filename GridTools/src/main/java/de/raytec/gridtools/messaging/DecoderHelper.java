@@ -5,9 +5,9 @@
 package de.raytec.gridtools.messaging;
 
 import de.raytec.gridtools.Packet;
-import de.raytec.java.lib.exceptions.InvalidContentException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
 
 /**
  *

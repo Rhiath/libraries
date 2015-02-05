@@ -4,13 +4,13 @@
  */
 package de.raytec.gridtools;
 
-import de.raytec.java.lib.logging.Logging;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.endofinternet.raymoon.lib.logging.Logging;
 
 /**
  *

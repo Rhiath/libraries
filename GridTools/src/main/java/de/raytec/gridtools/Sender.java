@@ -5,9 +5,6 @@
 package de.raytec.gridtools;
 
 import de.raytec.gridtools.messaging.Message;
-import de.raytec.java.lib.doumentation.SoftwarePattern;
-import de.raytec.java.lib.exceptions.InvalidContentException;
-import de.raytec.java.lib.logging.Logging;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -16,6 +13,9 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.endofinternet.raymoon.lib.documentation.SoftwarePattern;
+import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;
+import net.endofinternet.raymoon.lib.logging.Logging;
 
 /**
  *
