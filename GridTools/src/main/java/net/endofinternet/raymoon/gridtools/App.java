@@ -1,7 +1,7 @@
-package de.raytec.gridtools;
+package net.endofinternet.raymoon.gridtools;
 
-import de.raytec.gridtools.messaging.DecoderHelper;
-import de.raytec.gridtools.messaging.ReceiverEndpointAnnouncement;
+import net.endofinternet.raymoon.gridtools.messaging.DecoderHelper;
+import net.endofinternet.raymoon.gridtools.messaging.ReceiverEndpointAnnouncement;
 import java.io.File;
 import java.io.IOException;
 import java.net.DatagramSocket;

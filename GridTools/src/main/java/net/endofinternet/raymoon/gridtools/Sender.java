@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.raytec.gridtools;
+package net.endofinternet.raymoon.gridtools;
 
-import de.raytec.gridtools.messaging.Message;
+import net.endofinternet.raymoon.gridtools.messaging.Message;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

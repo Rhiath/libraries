@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.raytec.gridtools.remoteOperations;
+package net.endofinternet.raymoon.gridtools.remoteOperations;
 
 import java.util.HashMap;
 import java.util.Map;

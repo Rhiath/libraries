@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.raytec.gridtools.messaging;
+package net.endofinternet.raymoon.gridtools.messaging;
 
 import java.nio.ByteBuffer;
 import net.endofinternet.raymoon.lib.exceptions.InvalidContentException;

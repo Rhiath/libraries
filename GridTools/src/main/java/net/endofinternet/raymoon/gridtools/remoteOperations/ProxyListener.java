@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.raytec.gridtools.remoteOperations;
+package net.endofinternet.raymoon.gridtools.remoteOperations;
 
-import de.raytec.gridtools.Sender;
+import net.endofinternet.raymoon.gridtools.Sender;
 import java.lang.reflect.Method;
 
 /**
