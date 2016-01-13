@@ -60,7 +60,7 @@ public class BusinessEntityService {
     @Path("/get")
     public Response get_streamed2(@Context MessageContext context) throws FileNotFoundException {
         AuthorizationPolicy policy = (AuthorizationPolicy) context.get(AuthorizationPolicy.class.getCanonicalName());
-        final File file = new File("/home/raymoon/Pictures/DSC_4277.jpg");
+        final File file = new File("/home/raymoon/Pictures/Afrika.png");
 
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM).build();
     }
@@ -69,7 +69,7 @@ public class BusinessEntityService {
     @Path("/get_s")
     public Response get_streamed(@Context MessageContext context) throws FileNotFoundException {
         AuthorizationPolicy policy = (AuthorizationPolicy) context.get(AuthorizationPolicy.class.getCanonicalName());
-        final File file = new File("/home/raymoon/Pictures/DSC_4277.bmp");
+        final File file = new File("/home/raymoon/Pictures/Afrika.png");
         StreamingOutput streamer = new StreamingOutput() {
             @Override
             public void write(final OutputStream output) throws IOException, WebApplicationException {
