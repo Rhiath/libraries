@@ -33,7 +33,7 @@ public class App {
             sf.setResourceProvider(new SingletonResourceProvider(restRegistry.getService(type)));
         }
 
-        sf.setAddress("http://localhost:" + port + "/");
+        sf.setAddress("http://0.0.0.0:" + port + "/");
         addAuthenticationHandler(sf);
         BindingFactoryManager manager = sf.getBus().getExtension(BindingFactoryManager.class);
         JAXRSBindingFactory factory = new JAXRSBindingFactory();
