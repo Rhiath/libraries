@@ -52,7 +52,7 @@ public class TopologyNode implements TopologyCoordinationService {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(TopologyNode.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("here is a link loss?");
                     }
 
                     notifyAllReceivers();
@@ -174,7 +174,7 @@ public class TopologyNode implements TopologyCoordinationService {
 
     public void informAboutState(String sourceNode, List<LinkAvailability> availability) {
         if (Math.random() < 0.1) {
-            throw new RuntimeException("simulated link loss");
+//            throw new RuntimeException("simulated link loss");
         }
         for (LinkAvailability toCheck : availability) {
             if (toCheck.source.equals(selfName)) {

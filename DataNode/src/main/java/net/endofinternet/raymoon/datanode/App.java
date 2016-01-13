@@ -55,10 +55,14 @@ public class App {
         Thread.sleep(r.nextInt(100) + 3);
 
         while (true) {
+            int n = 0;
             Thread.sleep(1000);
             for (TopologyNode node : nodes) {
-                node.printState();
-                System.out.println("");
+                n++;
+                if (n == 1) {
+                    node.printState();
+                    System.out.println("");
+                }
             }
         }
     }
