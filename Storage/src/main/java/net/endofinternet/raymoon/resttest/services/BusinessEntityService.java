@@ -46,11 +46,6 @@ import javax.ws.rs.core.StreamingOutput;
 @Path("/")
 public class BusinessEntityService {
 
-    private final OObjectDatabaseTx database;
-
-    public BusinessEntityService(OObjectDatabaseTx database) {
-        this.database = database;
-    }
 
 //
 //    @GET
