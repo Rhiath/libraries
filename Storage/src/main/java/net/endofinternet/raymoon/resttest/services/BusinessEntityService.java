@@ -8,6 +8,7 @@ package net.endofinternet.raymoon.resttest.services;
  *
  * @author raymoon
  */
+import com.orientechnologies.orient.object.db.OObjectDatabaseTx;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +45,13 @@ import javax.ws.rs.core.StreamingOutput;
 
 @Path("/")
 public class BusinessEntityService {
+
+    private final OObjectDatabaseTx database;
+
+    public BusinessEntityService(OObjectDatabaseTx database) {
+        this.database = database;
+    }
+
 //
 //    @GET
 //    @Path("/{id}")
@@ -55,7 +63,6 @@ public class BusinessEntityService {
 //
 //        return "payload(id)";
 //    }
-
     @GET
     @Path("/get")
     public Response get_streamed2(@Context MessageContext context) throws FileNotFoundException {
@@ -73,22 +80,22 @@ public class BusinessEntityService {
         StreamingOutput streamer = new StreamingOutput() {
             @Override
             public void write(final OutputStream output) throws IOException, WebApplicationException {
-                
+
                 try (InputStream fis = new FileInputStream(file)) {
-                byte[] buffer = new byte[1024];
-                int read = 0;
-                
-                while (read >= 0 ) {
-                    read = fis.read(buffer);
-                    
-                    if ( read > 0 ){
-                        System.out.println("writing "+read+" bytes");
-                        output.write(buffer, 0, read);
-                        Thread.sleep(1);
-                    
+                    byte[] buffer = new byte[1024];
+                    int read = 0;
+
+                    while (read >= 0) {
+                        read = fis.read(buffer);
+
+                        if (read > 0) {
+                            System.out.println("writing " + read + " bytes");
+                            output.write(buffer, 0, read);
+                            Thread.sleep(1);
+
+                        }
                     }
-                }
-                
+
                 } catch (InterruptedException ex) {
                     Logger.getLogger(BusinessEntityService.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -103,7 +110,7 @@ public class BusinessEntityService {
                 }
             }
         };
-        
+
         return Response.ok(streamer, MediaType.APPLICATION_OCTET_STREAM).build();
     }
 
