@@ -23,11 +23,26 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         Registry restRegistry = new RegistryImpl();
-      
+
         restRegistry.register(BusinessEntityService.class, new BusinessEntityService());
-        restRegistry.register(Replication.class, new Replication());
+        final Replication replication = new Replication();
+        restRegistry.register(Replication.class, replication);
 
         startRestServices(9000, restRegistry);
+
+//        try (OObjectDatabaseTx database = new OObjectDatabaseTx("remote:localhost/petshop").open("root", "root")) {
+//            database.getEntityManager().registerEntityClass(Replication.ReplicationNotification.class);
+//            database.getEntityManager().registerEntityClass(Replication.ReplicationSource.class);
+//            final Replication.ReplicationSource source = new Replication.ReplicationSource();
+//            
+//            source.setBaseURL("http://localhost:9000/");
+//            source.setNode("serverA");
+//            
+//            database.begin();
+//            database.save(source);
+//            database.commit();
+//        }
+        replication.start();
 
     }
 
