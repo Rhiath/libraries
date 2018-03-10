@@ -34,6 +34,31 @@ public class TEST {
 
 		Assert.assertTrue(counter.get() == 1);
 	}
+	
+	@Test
+	public void testIsolation() throws InterruptedException {
+		StatelessEventing e1 = new StatelessEventing();
+		StatelessEventing e2 = new StatelessEventing();
+
+		AtomicInteger counter1 = new AtomicInteger(0);
+		AtomicInteger counter2 = new AtomicInteger(0);
+
+		MyEvent event = new MyEvent(5);
+		e1.on(MyEvent.class).perform((t) -> {
+			if (t == event)
+				counter1.incrementAndGet();
+		});
+		e2.on(MyEvent.class).perform((t) -> {
+			if (t == event)
+				counter2.incrementAndGet();
+		});
+		
+		e2.emit(event);
+
+		TimeUnit.SECONDS.sleep(1);
+
+		Assert.assertTrue(counter2.get() == 1);
+	}
 
 	@Test
 	public void testThrougput() throws InterruptedException {
